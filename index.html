@@ -67,7 +67,6 @@
             <h1 class="text-xl font-bold tracking-wider text-zinc-900">PENLIGHT MAKER</h1>
             <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆共有</p>
         </header>
-
         <!-- プレビュー（常に上部で固定表示・操作しながらリアルタイム確認可能） -->
         <section class="sticky top-2 z-30 bg-white/95 backdrop-blur-sm pb-2 pt-1 flex flex-col gap-1.5 border-b border-zinc-100">
             <div class="flex items-center justify-between">
@@ -86,20 +85,17 @@
                         <span id="swing-label">振る</span>
                     </button>
                 </div>
-
                 <!-- プレビューの位置・視点リセットボタン（左下） -->
                 <button type="button" id="reset-pos-btn" class="absolute bottom-2.5 left-2.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 text-[11px] font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1 z-10 whitespace-nowrap" title="位置と視点をリセット">
                     <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
                     <span>初期位置</span>
                 </button>
-
                 <!-- カメラアングルリセット（右下） -->
                 <button type="button" id="reset-cam-btn" class="absolute bottom-2.5 right-2.5 p-2 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 hover:bg-white transition-all shadow-sm z-10" title="アングルを正面に戻す">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
         </section>
-
         <!-- ① デザインを選択 -->
         <section class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
@@ -134,14 +130,12 @@
                 </button>
             </div>
         </section>
-
         <!-- ② 発光カラーを選択 -->
         <section class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">2</span>
                 <h2 class="text-sm font-bold text-zinc-800">発光カラーを選択</h2>
             </div>
-
             <div class="flex items-center justify-between bg-zinc-50 border border-zinc-200 rounded-2xl p-3">
                 <div class="flex items-center gap-3">
                     <input type="color" id="color-picker" value="#FF4D8D">
@@ -160,15 +154,14 @@
                 </div>
             </div>
         </section>
-
         <!-- ③ デザイン部分の文字入れ -->
         <section id="text-input-section" class="flex flex-col gap-2">
             <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">3</span>
                 <h2 class="text-sm font-bold text-zinc-800">デザイン部分の文字（推しの名前など）</h2>
             </div>
-            <input type="text" id="head-text" placeholder="例：〇〇ちゃんだいすき / 推ししか勝たん" maxlength="24"
-                class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
+            <textarea id="head-text" rows="2" placeholder="例：〇〇ちゃんだいすき&#10;推ししか勝たん（Enterで改行できます）" maxlength="40"
+                class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors resize-y leading-relaxed"></textarea>
             
             <!-- 文字の位置・サイズ調整コントロール -->
             <div id="text-controls" class="hidden flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-2xl mt-1">
@@ -195,7 +188,6 @@
                 </div>
             </div>
         </section>
-
         <!-- ④ 持ち手の名前 -->
         <section class="flex flex-col gap-2 border-t border-zinc-100 pt-4">
             <div class="flex items-center gap-2">
@@ -205,7 +197,6 @@
             <input type="text" id="handle-text" placeholder="例：HANAKO / 2026.11.16" maxlength="20"
                 class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
         </section>
-
         <!-- ⑤ 持ち手のリボン装飾 -->
         <section class="flex flex-col gap-3 border-t border-zinc-100 pt-4">
             <div class="flex items-center justify-between">
@@ -217,7 +208,6 @@
                     ON
                 </button>
             </div>
-
             <div id="ribbon-controls" class="flex flex-col gap-3 bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5">
                 <!-- リボンカラー -->
                 <div class="flex items-center justify-between gap-2">
@@ -236,7 +226,6 @@
                         <button type="button" data-color="#FFFFFF" class="w-6 h-6 rounded-full border border-zinc-300 bg-white hover:scale-110 transition-transform" aria-label="ホワイト"></button>
                     </div>
                 </div>
-
                 <!-- 中央ブローチ選択 -->
                 <div class="flex flex-col gap-1.5 pt-2 border-t border-zinc-200">
                     <span class="text-xs font-bold text-zinc-700">中央の飾りパーツ（ゴールド枠ブローチ）</span>
@@ -266,7 +255,6 @@
                 </div>
             </div>
         </section>
-
         <!-- ③ 共有ボタンのみに統合 -->
         <section class="flex flex-col gap-2.5 pt-2 border-t border-zinc-100">
             <button type="button" id="share-btn" class="w-full py-3.5 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 active:scale-[0.99] text-white text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-sm">
@@ -274,7 +262,6 @@
                 <span>共有</span>
             </button>
         </section>
-
         <!-- フッター（利用規約リンク） -->
         <footer class="pt-2 border-t border-zinc-100 flex flex-col items-center gap-1.5 text-center">
             <button type="button" id="open-terms-btn" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 underline underline-offset-4 py-1 px-3 rounded-lg transition-colors">
@@ -283,7 +270,6 @@
             <p class="text-[10px] text-zinc-400">© まや式ペンライトメーカー</p>
         </footer>
     </div>
-
     <!-- 利用規約モーダル -->
     <div id="terms-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white border border-zinc-200 rounded-3xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -298,12 +284,10 @@
                 <p class="text-zinc-600">
                     「まや式ペンライトメーカー」（以下「本ツール」）をご利用いただく前に、以下の規約をご確認ください。本ツールを利用した時点で、本規約に同意したものとみなします。
                 </p>
-
                 <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
                     <h4 class="font-bold text-zinc-900">1. 利用条件</h4>
                     <p>制作者のX（旧Twitter）アカウントのフォロー、および指定ポストへの「いいね（❤️）・リポスト（♻️）」を行うことでご利用いただけます。</p>
                 </div>
-
                 <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
                     <h4 class="font-bold text-zinc-900">2. 許可される利用（OK）</h4>
                     <ul class="list-disc list-inside space-y-1 text-zinc-700">
@@ -312,7 +296,6 @@
                         <li>上記配信・動画における投げ銭・メンバーシップ・サブスクリプション収益化の範囲での商用利用</li>
                     </ul>
                 </div>
-
                 <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
                     <h4 class="font-bold text-zinc-900">3. 禁止事項（NG）</h4>
                     <ul class="list-disc list-inside space-y-1 text-zinc-700">
@@ -323,7 +306,6 @@
                         <li>公序良俗に反する利用、誹謗中傷・違法行為・第三者の権利侵害を伴う利用</li>
                     </ul>
                 </div>
-
                 <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
                     <h4 class="font-bold text-zinc-900">4. 免責事項・その他</h4>
                     <ul class="list-disc list-inside space-y-1 text-zinc-600">
@@ -333,7 +315,6 @@
                     </ul>
                 </div>
             </div>
-
             <div class="px-5 py-3.5 border-t border-zinc-100 shrink-0">
                 <button type="button" id="accept-terms-btn" class="w-full py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors">
                     閉じる
@@ -341,7 +322,6 @@
             </div>
         </div>
     </div>
-
     <!-- 画像保存＆共有用プレビューモーダル（WebView制限回避用） -->
     <div id="media-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white border border-zinc-200 rounded-3xl max-w-sm w-full p-5 flex flex-col items-center gap-4 shadow-2xl">
@@ -355,11 +335,9 @@
             <p class="text-xs text-zinc-600 text-center leading-relaxed bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 w-full">
                 下の画像を<span class="font-bold text-zinc-900">長押し</span>すると<br>スマホへの保存やSNS共有が確実にできます！
             </p>
-
             <div class="w-full rounded-2xl overflow-hidden border border-zinc-200 flex items-center justify-center" style="background-color: #f4f4f5; background-image: linear-gradient(45deg, #e4e4e7 25%, transparent 25%), linear-gradient(-45deg, #e4e4e7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e4e4e7 75%), linear-gradient(-45deg, transparent 75%, #e4e4e7 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0px;">
                 <img id="modal-preview-img" src="" alt="ペンライト画像" class="max-h-72 w-auto object-contain">
             </div>
-
             <div class="w-full grid grid-cols-2 gap-2">
                 <button type="button" id="modal-native-share-btn" class="py-2.5 px-3 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors">
                     共有メニューを開く
@@ -370,12 +348,10 @@
             </div>
         </div>
     </div>
-
     <!-- トースト通知用コンテナ -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs font-bold px-5 py-3 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 z-50 whitespace-nowrap shadow-lg">
         通知メッセージ
     </div>
-
     <script>
         // アプリケーションの状態管理
         const state = {
@@ -393,34 +369,27 @@
             ribbonCharm: 'heart',
             isSwinging: false
         };
-
         // 共有用ポストテキスト定数
         const SHARE_POST_TEXT = `＼オリジナルペンライトが作れる！ ／
 🎤#まや式ペンライトメーカー を作りました！
-
 🔽Xのフォロー＋このポストを❤️♻️で利用◎
 https://sayamamaya.github.io/MayaCyalumeMaker/
-
 🆗配信・動画・SNSでの利用（投げ銭・メンバーシップ収益化◎）
 🆖画像・グッズ等の販売、有償・無償を問わない配布、自作発言、コードの複製・改変・転用`;
-
         const DEFAULT_CAM_POS = { x: 0, y: 1.0, z: 12.0 };
         const DEFAULT_CAM_TARGET = { x: 0, y: 0.85, z: 0 };
-
         let scene, camera, renderer, controls, composer, bloomPass;
         let penlightGroup, headGroup, handleGroup;
         let headMaterial, auraMaterial, glowLight;
         let swingPhase = 0;
         let currentModalBlob = null;
         let currentModalFilename = 'penlight.png';
-
-        // テキスト入力の安全なサニタイズ（制御文字を除去し、最大文字数を制限）
+        // テキスト入力の安全なサニタイズ（改行とタブ以外の制御文字を除去し、最大文字数を制限）
         function sanitizeUserText(str, maxLen) {
             if (typeof str !== 'string') return '';
-            const cleaned = str.replace(/[\x00-\x1F\x7F]/g, '');
+            const cleaned = str.replace(/\r\n?/g, '\n').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
             return Array.from(cleaned).slice(0, maxLen).join('');
         }
-
         function showToast(message) {
             const toast = document.getElementById('toast');
             if (!toast) return;
@@ -430,7 +399,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 toast.classList.add('opacity-0');
             }, 2500);
         }
-
         function openMediaModal(blob, filename, titleText) {
             currentModalBlob = blob;
             currentModalFilename = filename;
@@ -449,7 +417,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             dlBtn.download = filename;
             modal.classList.remove('hidden');
         }
-
         function initThree() {
             const container = document.getElementById('canvas-container');
             const canvas = document.getElementById('three-canvas');
@@ -457,7 +424,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             scene.background = new THREE.Color('#09090B');
             camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
             camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
-
             // premultipliedAlpha: false にすることで透過ピクセル出力時の黒縁発生を防ぐ
             renderer = new THREE.WebGLRenderer({
                 canvas: canvas,
@@ -469,20 +435,17 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             renderer.setClearColor(0x000000, 0);
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.minDistance = 4;
             controls.maxDistance = 18;
             controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
-
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
             scene.add(ambientLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
             dirLight.position.set(5, 12, 8);
             scene.add(dirLight);
-
             if (typeof THREE.EffectComposer !== 'undefined' && typeof THREE.UnrealBloomPass !== 'undefined') {
                 const renderScene = new THREE.RenderPass(scene, camera);
                 bloomPass = new THREE.UnrealBloomPass(
@@ -493,25 +456,20 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 composer.addPass(renderScene);
                 composer.addPass(bloomPass);
             }
-
             penlightGroup = new THREE.Group();
             scene.add(penlightGroup);
             headGroup = new THREE.Group();
             handleGroup = new THREE.Group();
             penlightGroup.add(headGroup);
             penlightGroup.add(handleGroup);
-
             glowLight = new THREE.PointLight(state.color, 1.0, 10);
             glowLight.position.set(0, 2.4, 0.5);
             penlightGroup.add(glowLight);
-
             buildHandle();
             buildHead();
-
             window.addEventListener('resize', onWindowResize);
             animate();
         }
-
         function onWindowResize() {
             const container = document.getElementById('canvas-container');
             if (!container) return;
@@ -522,7 +480,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 composer.setSize(container.clientWidth, container.clientHeight);
             }
         }
-
         function applySwingPose(phase) {
             if (!penlightGroup) return;
             const pivotY = -2.2;
@@ -534,13 +491,11 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             penlightGroup.position.x = -Math.sin(rotZ) * (-pivotY);
             penlightGroup.position.y = posY + (Math.cos(rotZ) - 1) * (-pivotY);
         }
-
         function resetSwingPose() {
             if (!penlightGroup) return;
             penlightGroup.rotation.set(0, 0, 0);
             penlightGroup.position.set(0, 0, 0);
         }
-
         function setFixedFrontView() {
             const savedState = {
                 camPos: camera.position.clone(),
@@ -556,7 +511,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             resetSwingPose();
             return savedState;
         }
-
         function restoreViewState(savedState) {
             if (!savedState) return;
             camera.position.copy(savedState.camPos);
@@ -566,7 +520,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             penlightGroup.rotation.copy(savedState.penRot);
             penlightGroup.position.copy(savedState.penPos);
         }
-
         // 2000x2000px四方の透過静止画Blobを生成し、完了後にプレビュー表示状態を復元する
         function renderSquareExportBlob(callback) {
             const EXPORT_SIZE = 2000;
@@ -577,7 +530,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             const prevAspect = camera.aspect;
             const prevBg = scene.background;
             const savedView = setFixedFrontView();
-
             try {
                 camera.aspect = 1.0;
                 camera.updateProjectionMatrix();
@@ -589,9 +541,7 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     composer.setPixelRatio(1);
                     composer.setSize(EXPORT_SIZE, EXPORT_SIZE);
                 }
-
                 renderer.render(scene, camera);
-
                 renderer.domElement.toBlob((blob) => {
                     scene.background = prevBg;
                     camera.aspect = prevAspect;
@@ -620,7 +570,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 showToast('2000px四方画像の生成中にエラーが発生しました');
             }
         }
-
         function animate() {
             requestAnimationFrame(animate);
             if (state.isSwinging) {
@@ -639,7 +588,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 renderer.render(scene, camera);
             }
         }
-
         function buildHandle() {
             while (handleGroup.children.length > 0) {
                 handleGroup.remove(handleGroup.children[0]);
@@ -653,7 +601,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             const gripMesh = new THREE.Mesh(gripGeo, gripMat);
             gripMesh.position.y = -1.2;
             handleGroup.add(gripMesh);
-
             const ringMat = new THREE.MeshStandardMaterial({
                 color: 0x3F3F46,
                 roughness: 0.25,
@@ -663,24 +610,20 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             const ringMesh = new THREE.Mesh(ringGeo, ringMat);
             ringMesh.position.y = 0.0;
             handleGroup.add(ringMesh);
-
             const capGeo = new THREE.CylinderGeometry(0.28, 0.27, 0.15, 32);
             const capMesh = new THREE.Mesh(capGeo, ringMat);
             capMesh.position.y = -2.45;
             handleGroup.add(capMesh);
-
             const btnMat = new THREE.MeshStandardMaterial({ color: 0x27272A, roughness: 0.2 });
             const btnGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.05, 16);
             btnGeo.rotateX(Math.PI / 2);
             const btnMesh = new THREE.Mesh(btnGeo, btnMat);
             btnMesh.position.set(0, -0.45, 0.31);
             handleGroup.add(btnMesh);
-
             if (state.hasRibbon) {
                 const ribbonObj = buildHandleRibbon();
                 handleGroup.add(ribbonObj);
             }
-
             if (state.handleText.trim() !== '') {
                 const arcAngle = Math.PI * 0.55;
                 const cylRadius = 0.315;
@@ -698,14 +641,12 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 handleGroup.add(textMesh);
             }
         }
-
         function buildHandleRibbon() {
             const ribGroup = new THREE.Group();
             const ribScale = 1.65;
             const ribPosZ = 0.345;
             ribGroup.position.set(0, -0.28, ribPosZ);
             ribGroup.scale.setScalar(ribScale);
-
             const ribColorObj = new THREE.Color(state.ribbonColor);
             const ribMat = new THREE.MeshStandardMaterial({
                 color: ribColorObj,
@@ -723,20 +664,17 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 roughness: 0.28,
                 metalness: 0.35
             });
-
             const bandRadiusTop = 0.348 / ribScale;
             const bandRadiusBottom = 0.344 / ribScale;
             const bandGeo = new THREE.CylinderGeometry(bandRadiusTop, bandRadiusBottom, 0.13, 32);
             const bandMesh = new THREE.Mesh(bandGeo, ribMat);
             bandMesh.position.set(0, 0.02, -ribPosZ / ribScale);
             ribGroup.add(bandMesh);
-
             [-1, 1].forEach(side => {
                 const loopSideGroup = new THREE.Group();
                 loopSideGroup.position.set(side * 0.07, 0.02, 0.02);
                 loopSideGroup.rotation.y = side * -0.18;
                 loopSideGroup.rotation.z = side * 0.06;
-
                 const wingShape = new THREE.Shape();
                 wingShape.moveTo(0, -0.05);
                 wingShape.bezierCurveTo(side * 0.16, -0.24, side * 0.36, -0.34, side * 0.44, -0.25);
@@ -744,7 +682,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 wingShape.bezierCurveTo(side * 0.44, 0.02, side * 0.48, 0.14, side * 0.41, 0.19);
                 wingShape.bezierCurveTo(side * 0.32, 0.22, side * 0.14, 0.12, 0, 0.05);
                 wingShape.closePath();
-
                 const radialSteps = 22;
                 const perimeterPts = wingShape.getSpacedPoints(128);
                 const numPerim = perimeterPts.length - 1;
@@ -753,7 +690,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const frontRingIdx = Array.from({ length: radialSteps + 1 }, () => new Array(numPerim));
                 const backRingIdx = Array.from({ length: radialSteps + 1 }, () => new Array(numPerim));
                 const centerPt = new THREE.Vector2(side * 0.08, -0.02);
-
                 for (let r = 0; r <= radialSteps; r++) {
                     const t = r / radialSteps;
                     const edgeRound = Math.sqrt(Math.max(0, 1 - Math.pow(t, 2.4)));
@@ -783,7 +719,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                         vertices.push(px, py, -halfThick * 0.78);
                     }
                 }
-
                 for (let r = 0; r < radialSteps; r++) {
                     for (let p = 0; p < numPerim; p++) {
                         const nextP = (p + 1) % numPerim;
@@ -804,7 +739,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                         }
                     }
                 }
-
                 for (let p = 0; p < numPerim; p++) {
                     const nextP = (p + 1) % numPerim;
                     const fA = frontRingIdx[radialSteps][p];
@@ -817,7 +751,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                         indices.push(fA, bB, bA, fA, fB, bB);
                     }
                 }
-
                 const loopGeo = new THREE.BufferGeometry();
                 loopGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
                 loopGeo.setIndex(indices);
@@ -826,13 +759,11 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 loopSideGroup.add(loopMesh);
                 ribGroup.add(loopSideGroup);
             });
-
             const knotGeo = new THREE.CylinderGeometry(0.095, 0.105, 0.17, 24);
             knotGeo.scale(0.85, 1.0, 1.15);
             const knotMesh = new THREE.Mesh(knotGeo, ribMat);
             knotMesh.position.set(0, 0.02, 0.04);
             ribGroup.add(knotMesh);
-
             [-0.035, 0.035].forEach(ky => {
                 const crease = new THREE.Mesh(new THREE.TorusGeometry(0.092, 0.014, 10, 24), creaseMat);
                 crease.rotation.x = Math.PI / 2;
@@ -840,7 +771,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 crease.position.set(0, 0.02 + ky, 0.04);
                 ribGroup.add(crease);
             });
-
             if (state.ribbonCharm !== 'none') {
                 const charmMesh = buildRibbonCharm(state.ribbonCharm, ribMat, goldTrimMat);
                 if (charmMesh) {
@@ -848,7 +778,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     ribGroup.add(charmMesh);
                 }
             }
-
             [-1, 1].forEach(side => {
                 const tailShape = new THREE.Shape();
                 tailShape.moveTo(-0.045, 0);
@@ -858,7 +787,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 tailShape.lineTo(-0.11, -0.56);
                 tailShape.quadraticCurveTo(-0.07, -0.25, -0.045, 0);
                 tailShape.closePath();
-
                 const tailGeo = new THREE.ExtrudeGeometry(tailShape, {
                     steps: 1,
                     depth: 0.022,
@@ -874,10 +802,8 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 tailMesh.rotation.x = -0.06;
                 ribGroup.add(tailMesh);
             });
-
             return ribGroup;
         }
-
         function buildRibbonCharm(type, ribMat, goldTrimMat) {
             const charmGroup = new THREE.Group();
             const gemMat = new THREE.MeshStandardMaterial({
@@ -885,7 +811,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 roughness: 0.14,
                 metalness: 0.12
             });
-
             function createExtrudedBrooch(shape, scale = 1.0) {
                 const group = new THREE.Group();
                 const frameGeo = new THREE.ExtrudeGeometry(shape, {
@@ -897,7 +822,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 });
                 const frameMesh = new THREE.Mesh(frameGeo, goldTrimMat);
                 group.add(frameMesh);
-
                 const gemGeo = new THREE.ExtrudeGeometry(shape, {
                     depth: 0.026,
                     bevelEnabled: true,
@@ -911,7 +835,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 group.scale.set(scale, scale, scale);
                 return group;
             }
-
             if (type === 'heart') {
                 const s = new THREE.Shape();
                 s.moveTo(0, -0.075);
@@ -979,7 +902,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             }
             return charmGroup;
         }
-
         // ② 文字入れマテリアル（transparent: true + premultipliedAlpha: false により保存時の黒縁を完全に解消）
         function createHeadTextMaterial(textTex) {
             return new THREE.MeshBasicMaterial({
@@ -990,14 +912,12 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 side: THREE.DoubleSide
             });
         }
-
         function buildHead() {
             while (headGroup.children.length > 0) {
                 headGroup.remove(headGroup.children[0]);
             }
             const baseColor = new THREE.Color(state.color);
             glowLight.color = baseColor;
-
             headMaterial = new THREE.MeshStandardMaterial({
                 color: baseColor,
                 emissive: baseColor,
@@ -1008,7 +928,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 opacity: 0.94,
                 depthWrite: true
             });
-
             auraMaterial = new THREE.MeshBasicMaterial({
                 color: baseColor,
                 transparent: true,
@@ -1017,9 +936,7 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 depthWrite: false,
                 side: THREE.FrontSide
             });
-
             const baseConnectWidth = 0.72;
-
             if (state.shape === 'stick') {
                 const radius = 0.335;
                 const stickHeight = 3.64;
@@ -1027,18 +944,15 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const stickMesh = new THREE.Mesh(stickGeo, headMaterial);
                 stickMesh.position.y = 1.93;
                 headGroup.add(stickMesh);
-
                 const auraGeo1 = new THREE.CylinderGeometry(radius * 1.18, radius * 1.18, stickHeight + 0.08, 32);
                 const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
                 auraMesh1.position.y = 1.93;
                 auraMesh1.userData.isAura = true;
                 headGroup.add(auraMesh1);
-
                 const domeGeo = new THREE.SphereGeometry(radius, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
                 const domeMesh = new THREE.Mesh(domeGeo, headMaterial);
                 domeMesh.position.y = 3.75;
                 headGroup.add(domeMesh);
-
                 if (state.headText.trim() !== '') {
                     const { size: tSize, x: tX, y: tY } = state.textConfig;
                     const arcAngle = Math.min(Math.PI * 1.2, Math.PI * 0.45 * tSize);
@@ -1062,18 +976,15 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const sphereMesh = new THREE.Mesh(sphereGeo, headMaterial);
                 sphereMesh.position.y = sphereCenterY;
                 headGroup.add(sphereMesh);
-
                 const auraGeo1 = new THREE.SphereGeometry(sphereRadius * 1.08, 36, 28);
                 const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
                 auraMesh1.position.y = sphereCenterY;
                 auraMesh1.userData.isAura = true;
                 headGroup.add(auraMesh1);
-
                 const neckGeo = new THREE.CylinderGeometry(0.42, 0.33, 0.28, 32);
                 const neckMesh = new THREE.Mesh(neckGeo, headMaterial);
                 neckMesh.position.y = 0.24;
                 headGroup.add(neckMesh);
-
                 if (state.headText.trim() !== '') {
                     const { size: tSize, x: tX, y: tY } = state.textConfig;
                     const plateW = 2.05 * tSize;
@@ -1112,19 +1023,16 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const headMesh = new THREE.Mesh(headGeo, headMaterial);
                 headMesh.position.y = 0.15;
                 headGroup.add(headMesh);
-
                 const auraMesh = new THREE.Mesh(headGeo, auraMaterial);
                 auraMesh.position.set(0, 0.15, 0);
                 auraMesh.scale.set(1.06, 1.06, 1.3);
                 auraMesh.userData.isAura = true;
                 headGroup.add(auraMesh);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(1.6, 0.155);
                 }
             }
         }
-
         function buildAnimalHead(type, baseConnectWidth) {
             const extrudeSettings = {
                 steps: 1,
@@ -1135,7 +1043,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 bevelSegments: 3
             };
             const halfW = baseConnectWidth / 2;
-
             if (type === 'dog') {
                 const dogShape = new THREE.Shape();
                 dogShape.moveTo(-halfW, 0);
@@ -1149,27 +1056,23 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 dogShape.bezierCurveTo(-1.88, 0.92, -1.42, 0.92, -1.12, 1.12);
                 dogShape.bezierCurveTo(-1.15, 0.72, -0.85, 0.25, -halfW, 0);
                 dogShape.closePath();
-
                 const dogGeo = new THREE.ExtrudeGeometry(dogShape, extrudeSettings);
                 dogGeo.translate(0, 0, -0.08);
                 const dogMesh = new THREE.Mesh(dogGeo, headMaterial);
                 dogMesh.position.y = 0.15;
                 dogMesh.renderOrder = 1;
                 headGroup.add(dogMesh);
-
                 const dogAura = new THREE.Mesh(dogGeo, auraMaterial);
                 dogAura.position.set(0, 0.15 - 0.04, 0);
                 dogAura.scale.set(1.05, 1.05, 1.3);
                 dogAura.userData.isAura = true;
                 dogAura.renderOrder = 2;
                 headGroup.add(dogAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + 1.25, 0.155);
                 }
                 return;
             }
-
             if (type === 'bear') {
                 const rFace = 1.42;
                 const cyFace = 1.42;
@@ -1187,7 +1090,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const ry = (dx / d) * h;
                 const pLow = { x: xm - rx, y: ym - ry };
                 const pHigh = { x: xm + rx, y: ym + ry };
-
                 const faceRightAngle = Math.atan2(pLow.y - cyFace, pLow.x);
                 const faceTopRightAngle = Math.atan2(pHigh.y - cyFace, pHigh.x);
                 const faceTopLeftAngle = Math.PI - faceTopRightAngle;
@@ -1198,7 +1100,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const leftEarEndAngle = Math.atan2(pLow.y - cyEar, -pLow.x + cxEar);
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
-
                 const bearShape = new THREE.Shape();
                 bearShape.moveTo(-halfW, 0);
                 bearShape.lineTo(halfW, 0);
@@ -1208,27 +1109,23 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 bearShape.absarc(-cxEar, cyEar, rEar, leftEarStartAngle, leftEarEndAngle, false);
                 bearShape.absarc(0, cyFace, rFace, faceLeftAngle, baseAngleLeft, false);
                 bearShape.closePath();
-
                 const bearGeo = new THREE.ExtrudeGeometry(bearShape, extrudeSettings);
                 bearGeo.translate(0, 0, -0.08);
                 const bearMesh = new THREE.Mesh(bearGeo, headMaterial);
                 bearMesh.position.y = 0.15;
                 bearMesh.renderOrder = 1;
                 headGroup.add(bearMesh);
-
                 const bearAura = new THREE.Mesh(bearGeo, auraMaterial);
                 bearAura.position.set(0, 0.15 - 0.04, 0);
                 bearAura.scale.set(1.06, 1.06, 1.3);
                 bearAura.userData.isAura = true;
                 bearAura.renderOrder = 2;
                 headGroup.add(bearAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
                 }
                 return;
             }
-
             if (type === 'cat') {
                 const rFace = 1.42;
                 const cyFace = 1.42;
@@ -1236,7 +1133,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const aHigh = 1.08;
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
-
                 const catShape = new THREE.Shape();
                 catShape.moveTo(-halfW, 0);
                 catShape.lineTo(halfW, 0);
@@ -1250,28 +1146,24 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 catShape.quadraticCurveTo(-1.36, 2.55, Math.cos(Math.PI - aLow) * rFace, cyFace + Math.sin(Math.PI - aLow) * rFace);
                 catShape.absarc(0, cyFace, rFace, Math.PI - aLow, baseAngleLeft, false);
                 catShape.closePath();
-
                 const catGeo = new THREE.ExtrudeGeometry(catShape, extrudeSettings);
                 catGeo.translate(0, 0, -0.08);
                 const catMesh = new THREE.Mesh(catGeo, headMaterial);
                 catMesh.position.y = 0.15;
                 catMesh.renderOrder = 1;
                 headGroup.add(catMesh);
-
                 const catAura = new THREE.Mesh(catGeo, auraMaterial);
                 catAura.position.set(0, 0.15 - 0.04, 0);
                 catAura.scale.set(1.06, 1.06, 1.3);
                 catAura.userData.isAura = true;
                 catAura.renderOrder = 2;
                 headGroup.add(catAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
                 }
                 return;
             }
         }
-
         function addFlatTextMesh(posY, posZ) {
             const { size: tSize, x: tX, y: tY } = state.textConfig;
             const plateW = 1.95 * tSize;
@@ -1285,7 +1177,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             textMesh.renderOrder = 10;
             headGroup.add(textMesh);
         }
-
         function createSingleContourShape(type, baseConnectWidth) {
             const shape = new THREE.Shape();
             const halfW = baseConnectWidth / 2;
@@ -1332,10 +1223,9 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             }
             return shape;
         }
-
         // 文字列をCanvas上で白文字として描画
         function createHeadTextTexture(text, isVertical, aspectRatio = 1) {
-            const safeText = sanitizeUserText(text, 24);
+            const safeText = sanitizeUserText(text, 40);
             const canvas = document.createElement('canvas');
             if (isVertical) {
                 canvas.height = 1024;
@@ -1352,42 +1242,48 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             ctx.fillStyle = '#FFFFFF';
             ctx.shadowColor = 'rgba(255, 255, 255, 0.95)';
             ctx.shadowBlur = 12;
-
             if (isVertical) {
-                const chars = Array.from(safeText);
+                // 縦書きモード：改行（\n）がある場合は列（右から左または左から右）として並べて描画
+                const columns = safeText.split('\n');
+                const numCols = Math.max(1, columns.length);
                 const maxAvailableHeight = canvas.height * 0.88;
-                const maxAvailableWidth = canvas.width * 0.72;
+                const colWidth = canvas.width / numCols;
+                const maxAvailableWidth = colWidth * 0.72;
                 const lineHeightRatio = 1.12;
-                let fontSize = Math.min(maxAvailableWidth, 110);
-                if (chars.length > 0 && chars.length * fontSize * lineHeightRatio > maxAvailableHeight) {
-                    fontSize = Math.floor(maxAvailableHeight / (chars.length * lineHeightRatio));
-                }
-                fontSize = Math.max(20, fontSize);
-                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-                const totalHeight = chars.length * fontSize * lineHeightRatio;
-                let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
+                const maxCharsInCol = Math.max(1, ...columns.map(col => Array.from(col).length));
 
-                chars.forEach((char) => {
-                    ctx.save();
-                    ctx.translate(canvas.width / 2, startY);
-                    if (char === 'ー' || char === '-' || char === '〜' || char === '~' || char === '＝' || char === '=') {
-                        ctx.rotate(Math.PI / 2);
-                        ctx.fillText(char, 0, 0);
-                    } else if (char === '、' || char === '。' || char === '，' || char === '．') {
-                        ctx.fillText(char, fontSize * 0.36, -fontSize * 0.36);
-                    } else {
-                        ctx.fillText(char, 0, 0);
-                    }
-                    ctx.restore();
-                    startY += fontSize * lineHeightRatio;
+                let fontSize = Math.min(maxAvailableWidth, 110);
+                if (maxCharsInCol * fontSize * lineHeightRatio > maxAvailableHeight) {
+                    fontSize = Math.floor(maxAvailableHeight / (maxCharsInCol * lineHeightRatio));
+                }
+                fontSize = Math.max(18, fontSize);
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+
+                // 複数列の場合は右から左へ並べる（日本語縦書きの自然な並び）
+                columns.forEach((colText, colIndex) => {
+                    const chars = Array.from(colText);
+                    const colCenterX = canvas.width - colWidth * (colIndex + 0.5);
+                    const totalHeight = chars.length * fontSize * lineHeightRatio;
+                    let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
+
+                    chars.forEach((char) => {
+                        ctx.save();
+                        ctx.translate(colCenterX, startY);
+                        if (char === 'ー' || char === '-' || char === '〜' || char === '~' || char === '＝' || char === '=') {
+                            ctx.rotate(Math.PI / 2);
+                            ctx.fillText(char, 0, 0);
+                        } else if (char === '、' || char === '。' || char === '，' || char === '．') {
+                            ctx.fillText(char, fontSize * 0.36, -fontSize * 0.36);
+                        } else {
+                            ctx.fillText(char, 0, 0);
+                        }
+                        ctx.restore();
+                        startY += fontSize * lineHeightRatio;
+                    });
                 });
             } else {
-                const chars = Array.from(safeText);
-                let lines = [safeText];
-                if (chars.length >= 8) {
-                    const mid = Math.ceil(chars.length / 2);
-                    lines = [chars.slice(0, mid).join(''), chars.slice(mid).join('')];
-                }
+                // 横書きモード：ユーザーが入力した改行（\n）をそのまま行として扱う
+                const lines = safeText.split('\n');
                 const maxTextWidth = canvas.width * 0.85;
                 const maxTextHeight = canvas.height * 0.75;
                 let fontSize = lines.length > 1 ? 96 : 130;
@@ -1400,7 +1296,7 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 if (totalH > maxTextHeight) {
                     fontSize = Math.floor(fontSize * (maxTextHeight / totalH));
                 }
-                fontSize = Math.max(28, fontSize);
+                fontSize = Math.max(24, fontSize);
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
                 const finalLineHeight = fontSize * 1.22;
                 let startY = (canvas.height - finalLineHeight * (lines.length - 1)) / 2;
@@ -1409,13 +1305,11 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     startY += finalLineHeight;
                 });
             }
-
             const texture = new THREE.CanvasTexture(canvas);
             texture.premultiplyAlpha = false;
             texture.needsUpdate = true;
             return texture;
         }
-
         function createHandleTextTexture(text, aspectRatio = 0.3) {
             const safeText = sanitizeUserText(text, 20);
             const canvas = document.createElement('canvas');
@@ -1423,7 +1317,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             canvas.width = Math.max(128, Math.round(canvas.height * aspectRatio));
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(Math.PI / 2);
@@ -1440,12 +1333,10 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             ctx.textBaseline = 'middle';
             ctx.fillText(safeText, 0, 0);
             ctx.restore();
-
             const texture = new THREE.CanvasTexture(canvas);
             texture.needsUpdate = true;
             return texture;
         }
-
         function setupUI() {
             const shapeBtns = document.querySelectorAll('.shape-btn');
             shapeBtns.forEach(btn => {
@@ -1458,7 +1349,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     buildHead();
                 });
             });
-
             const colorPicker = document.getElementById('color-picker');
             const colorHex = document.getElementById('color-hex');
             function updateColor(newColor) {
@@ -1481,9 +1371,8 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             document.querySelectorAll('#preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateColor(btn.dataset.color));
             });
-
             document.getElementById('head-text').addEventListener('input', (e) => {
-                const sanitized = sanitizeUserText(e.target.value, 24);
+                const sanitized = sanitizeUserText(e.target.value, 40);
                 state.headText = sanitized;
                 const textControls = document.getElementById('text-controls');
                 if (state.headText.trim() !== '') {
@@ -1493,7 +1382,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 }
                 buildHead();
             });
-
             document.getElementById('text-size-slider').addEventListener('input', (e) => {
                 state.textConfig.size = parseFloat(e.target.value);
                 document.getElementById('text-size-val').textContent = state.textConfig.size.toFixed(2);
@@ -1509,17 +1397,14 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 document.getElementById('text-y-val').textContent = state.textConfig.y.toFixed(2);
                 buildHead();
             });
-
             document.getElementById('handle-text').addEventListener('input', (e) => {
                 state.handleText = sanitizeUserText(e.target.value, 20);
                 buildHandle();
             });
-
             const toggleRibbonBtn = document.getElementById('toggle-ribbon-btn');
             const ribbonControls = document.getElementById('ribbon-controls');
             const ribbonColorPicker = document.getElementById('ribbon-color-picker');
             const ribbonColorHex = document.getElementById('ribbon-color-hex');
-
             toggleRibbonBtn.addEventListener('click', () => {
                 state.hasRibbon = !state.hasRibbon;
                 if (state.hasRibbon) {
@@ -1533,7 +1418,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 }
                 buildHandle();
             });
-
             function updateRibbonColor(newCol) {
                 state.ribbonColor = newCol.toUpperCase();
                 ribbonColorPicker.value = state.ribbonColor;
@@ -1544,7 +1428,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
             document.querySelectorAll('#ribbon-preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateRibbonColor(btn.dataset.color));
             });
-
             const charmBtns = document.querySelectorAll('.charm-btn');
             charmBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1561,7 +1444,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     buildHandle();
                 });
             });
-
             const toggleSwingBtn = document.getElementById('toggle-swing-btn');
             const swingIcon = document.getElementById('swing-icon');
             const swingLabel = document.getElementById('swing-label');
@@ -1577,7 +1459,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     swingLabel.textContent = '振る';
                 }
             });
-
             document.getElementById('reset-pos-btn').addEventListener('click', () => {
                 camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
                 controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
@@ -1589,15 +1470,12 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 swingLabel.textContent = '振る';
                 showToast('視点と位置を初期状態にリセットしました');
             });
-
             document.getElementById('reset-cam-btn').addEventListener('click', () => {
                 camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
                 controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
                 controls.update();
             });
-
             document.getElementById('share-btn').addEventListener('click', shareImage);
-
             document.getElementById('close-modal-btn').addEventListener('click', () => {
                 document.getElementById('media-modal').classList.add('hidden');
             });
@@ -1606,7 +1484,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     document.getElementById('media-modal').classList.add('hidden');
                 }
             });
-
             // 利用規約モーダルの開閉
             const termsModal = document.getElementById('terms-modal');
             document.getElementById('open-terms-btn').addEventListener('click', () => {
@@ -1623,7 +1500,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                     termsModal.classList.add('hidden');
                 }
             });
-
             document.getElementById('modal-native-share-btn').addEventListener('click', async () => {
                 if (!currentModalBlob) return;
                 const file = new File([currentModalBlob], currentModalFilename, { type: currentModalBlob.type });
@@ -1644,7 +1520,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 showToast('上の画像を長押しして保存・共有してください');
             });
         }
-
         async function shareImage() {
             showToast('2000×2000pxの透過画像を準備中...');
             renderSquareExportBlob(async (blob) => {
@@ -1666,7 +1541,6 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 openMediaModal(blob, filename, '共有・保存用画像（2000×2000px）');
             });
         }
-
         window.onload = function () {
             initThree();
             setupUI();
