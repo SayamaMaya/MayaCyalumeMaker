@@ -67,6 +67,21 @@
             <h1 class="text-xl font-bold tracking-wider text-zinc-900">PENLIGHT MAKER</h1>
             <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆共有</p>
         </header>
+        <!-- 使い方動画ガイド（ヘッダー直下・開閉式） -->
+        <details open class="group bg-zinc-50 border border-zinc-200 rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer select-none text-xs font-bold text-zinc-800 hover:bg-zinc-100 transition-colors list-none">
+                <span class="flex items-center gap-1.5">
+                    <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px]">▶</span>
+                    <span>使い方動画を見る</span>
+                </span>
+                <svg class="w-4 h-4 text-zinc-400 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="px-3 pb-3 pt-1">
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-zinc-200 bg-zinc-950 shadow-sm">
+                    <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/TPDceP3kvKs?si=KVlPjOVuxKoqs250" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        </details>
         <!-- プレビュー（常に上部で固定表示・操作しながらリアルタイム確認可能） -->
         <section class="sticky top-2 z-30 bg-white/95 backdrop-blur-sm pb-2 pt-1 flex flex-col gap-1.5 border-b border-zinc-100">
             <div class="flex items-center justify-between">
@@ -1251,21 +1266,18 @@ https://sayamamaya.github.io/MayaCyalumeMaker/
                 const maxAvailableWidth = colWidth * 0.72;
                 const lineHeightRatio = 1.12;
                 const maxCharsInCol = Math.max(1, ...columns.map(col => Array.from(col).length));
-
                 let fontSize = Math.min(maxAvailableWidth, 110);
                 if (maxCharsInCol * fontSize * lineHeightRatio > maxAvailableHeight) {
                     fontSize = Math.floor(maxAvailableHeight / (maxCharsInCol * lineHeightRatio));
                 }
                 fontSize = Math.max(18, fontSize);
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
                 // 複数列の場合は右から左へ並べる（日本語縦書きの自然な並び）
                 columns.forEach((colText, colIndex) => {
                     const chars = Array.from(colText);
                     const colCenterX = canvas.width - colWidth * (colIndex + 0.5);
                     const totalHeight = chars.length * fontSize * lineHeightRatio;
                     let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
-
                     chars.forEach((char) => {
                         ctx.save();
                         ctx.translate(colCenterX, startY);
