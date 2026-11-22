@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>オリジナルGLBペンライトメーカー</title>
+    <title>まや式ペンライトメーカー</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Zen Maru Gothic（丸ゴシック） -->
@@ -20,8 +20,6 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <!-- GIF生成ライブラリ (gif.js) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
     <style>
         body {
             font-family: 'Zen Maru Gothic', sans-serif;
@@ -67,7 +65,7 @@
         <!-- ヘッダー -->
         <header class="text-center border-b border-zinc-100 pb-3">
             <h1 class="text-xl font-bold tracking-wider text-zinc-900">PENLIGHT MAKER</h1>
-            <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆画像・GIF出力</p>
+            <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆共有</p>
         </header>
 
         <!-- プレビュー（常に上部で固定表示・操作しながらリアルタイム確認可能） -->
@@ -143,6 +141,7 @@
                 <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">2</span>
                 <h2 class="text-sm font-bold text-zinc-800">発光カラーを選択</h2>
             </div>
+
             <div class="flex items-center justify-between bg-zinc-50 border border-zinc-200 rounded-2xl p-3">
                 <div class="flex items-center gap-3">
                     <input type="color" id="color-picker" value="#FF4D8D">
@@ -197,7 +196,7 @@
             </div>
         </section>
 
-        <!-- ③ 持ち手の名前 -->
+        <!-- ④ 持ち手の名前 -->
         <section class="flex flex-col gap-2 border-t border-zinc-100 pt-4">
             <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">4</span>
@@ -207,7 +206,7 @@
                 class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
         </section>
 
-        <!-- ④ 持ち手のリボン装飾 -->
+        <!-- ⑤ 持ち手のリボン装飾 -->
         <section class="flex flex-col gap-3 border-t border-zinc-100 pt-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -218,6 +217,7 @@
                     ON
                 </button>
             </div>
+
             <div id="ribbon-controls" class="flex flex-col gap-3 bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5">
                 <!-- リボンカラー -->
                 <div class="flex items-center justify-between gap-2">
@@ -236,6 +236,7 @@
                         <button type="button" data-color="#FFFFFF" class="w-6 h-6 rounded-full border border-zinc-300 bg-white hover:scale-110 transition-transform" aria-label="ホワイト"></button>
                     </div>
                 </div>
+
                 <!-- 中央ブローチ選択 -->
                 <div class="flex flex-col gap-1.5 pt-2 border-t border-zinc-200">
                     <span class="text-xs font-bold text-zinc-700">中央の飾りパーツ（ゴールド枠ブローチ）</span>
@@ -266,31 +267,86 @@
             </div>
         </section>
 
-        <!-- ダウンロード / 画像を保存・共有 -->
+        <!-- ③ 共有ボタンのみに統合 -->
         <section class="flex flex-col gap-2.5 pt-2 border-t border-zinc-100">
-            <!-- 画像・GIF保存・共有 -->
-            <div class="grid grid-cols-3 gap-2">
-                <button type="button" id="save-img-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
-                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    <span>静止画保存</span>
-                </button>
-                <button type="button" id="save-gif-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
-                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>ループGIF</span>
-                </button>
-                <button type="button" id="share-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
-                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                    <span>共有 / 画像出力</span>
-                </button>
-            </div>
+            <button type="button" id="share-btn" class="w-full py-3.5 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 active:scale-[0.99] text-white text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-sm">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                <span>共有</span>
+            </button>
         </section>
+
+        <!-- フッター（利用規約リンク） -->
+        <footer class="pt-2 border-t border-zinc-100 flex flex-col items-center gap-1.5 text-center">
+            <button type="button" id="open-terms-btn" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 underline underline-offset-4 py-1 px-3 rounded-lg transition-colors">
+                利用規約・ガイドラインを確認する
+            </button>
+            <p class="text-[10px] text-zinc-400">© まや式ペンライトメーカー</p>
+        </footer>
     </div>
 
-    <!-- 画像・GIF保存＆共有用プレビューモーダル（WebView制限回避用） -->
+    <!-- 利用規約モーダル -->
+    <div id="terms-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white border border-zinc-200 rounded-3xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-100 shrink-0">
+                <h3 class="text-sm font-bold text-zinc-900">利用規約・ガイドライン</h3>
+                <button type="button" id="close-terms-btn" class="p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto flex flex-col gap-4 text-xs text-zinc-700 leading-relaxed">
+                <p class="text-zinc-600">
+                    「まや式ペンライトメーカー」（以下「本ツール」）をご利用いただく前に、以下の規約をご確認ください。本ツールを利用した時点で、本規約に同意したものとみなします。
+                </p>
+
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
+                    <h4 class="font-bold text-zinc-900">1. 利用条件</h4>
+                    <p>制作者のX（旧Twitter）アカウントのフォロー、および指定ポストへの「いいね（❤️）・リポスト（♻️）」を行うことでご利用いただけます。</p>
+                </div>
+
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
+                    <h4 class="font-bold text-zinc-900">2. 許可される利用（OK）</h4>
+                    <ul class="list-disc list-inside space-y-1 text-zinc-700">
+                        <li>SNSアイコン・ヘッダー・ポスト画像としての投稿</li>
+                        <li>配信画面・動画・サムネイル等での使用</li>
+                        <li>上記配信・動画における投げ銭・メンバーシップ・サブスクリプション収益化の範囲での商用利用</li>
+                    </ul>
+                </div>
+
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
+                    <h4 class="font-bold text-zinc-900">3. 禁止事項（NG）</h4>
+                    <ul class="list-disc list-inside space-y-1 text-zinc-700">
+                        <li>出力画像そのもの、または出力画像を用いたグッズ・デジタルデータ・返礼品等の<strong>販売行為全般</strong></li>
+                        <li>有償・無償を問わず、出力画像を第三者へ素材・データとして<strong>配布・譲渡する行為</strong></li>
+                        <li>本ツールや出力画像の自作発言</li>
+                        <li>本ツールのソースコード・デザイン・構成の無断複製、改変、再配布、二次利用</li>
+                        <li>公序良俗に反する利用、誹謗中傷・違法行為・第三者の権利侵害を伴う利用</li>
+                    </ul>
+                </div>
+
+                <div class="bg-zinc-50 border border-zinc-200 rounded-2xl p-3.5 flex flex-col gap-1.5">
+                    <h4 class="font-bold text-zinc-900">4. 免責事項・その他</h4>
+                    <ul class="list-disc list-inside space-y-1 text-zinc-600">
+                        <li>ご利用の端末・ブラウザ環境により、表示や出力結果が異なる場合があります。</li>
+                        <li>ユーザーが入力した文字や生成画像・投稿内容に起因するトラブルについて、制作者は一切の責任を負いません。</li>
+                        <li>本ツールは予告なく仕様変更・公開停止を行う場合があります。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="px-5 py-3.5 border-t border-zinc-100 shrink-0">
+                <button type="button" id="accept-terms-btn" class="w-full py-2.5 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors">
+                    閉じる
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 画像保存＆共有用プレビューモーダル（WebView制限回避用） -->
     <div id="media-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white border border-zinc-200 rounded-3xl max-w-sm w-full p-5 flex flex-col items-center gap-4 shadow-2xl">
             <div class="w-full flex items-center justify-between border-b border-zinc-100 pb-2">
-                <h3 id="modal-title" class="text-sm font-bold text-zinc-900">保存・共有用画像</h3>
+                <h3 id="modal-title" class="text-sm font-bold text-zinc-900">共有・保存用画像</h3>
                 <button type="button" id="close-modal-btn" class="p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -321,7 +377,7 @@
     </div>
 
     <script>
-        // アプリケーションの状態管理（画像アップロード・GLB出力を除いた一般公開向け構成）
+        // アプリケーションの状態管理
         const state = {
             shape: 'stick', // 'stick', 'heart', 'star', 'circle', 'sphere', 'bear', 'cat', 'dog'
             color: '#FF4D8D',
@@ -338,6 +394,16 @@
             isSwinging: false
         };
 
+        // 共有用ポストテキスト定数
+        const SHARE_POST_TEXT = `＼オリジナルペンライトが作れる！ ／
+🎤#まや式ペンライトメーカー を作りました！
+
+🔽Xのフォロー＋このポストを❤️♻️で利用◎
+https://sayamamaya.github.io/MayaCyalumeMaker/
+
+🆗配信・動画・SNSでの利用（投げ銭・メンバーシップ収益化◎）
+🆖画像・グッズ等の販売、有償・無償を問わない配布、自作発言、コードの複製・改変・転用`;
+
         const DEFAULT_CAM_POS = { x: 0, y: 1.0, z: 12.0 };
         const DEFAULT_CAM_TARGET = { x: 0, y: 0.85, z: 0 };
 
@@ -345,14 +411,12 @@
         let penlightGroup, headGroup, handleGroup;
         let headMaterial, auraMaterial, glowLight;
         let swingPhase = 0;
-        let isRecordingGif = false;
         let currentModalBlob = null;
         let currentModalFilename = 'penlight.png';
 
         // テキスト入力の安全なサニタイズ（制御文字を除去し、最大文字数を制限）
         function sanitizeUserText(str, maxLen) {
             if (typeof str !== 'string') return '';
-            // 改行やヌル文字などの制御文字を除去
             const cleaned = str.replace(/[\x00-\x1F\x7F]/g, '');
             return Array.from(cleaned).slice(0, maxLen).join('');
         }
@@ -375,7 +439,6 @@
             const img = document.getElementById('modal-preview-img');
             const title = document.getElementById('modal-title');
             const dlBtn = document.getElementById('modal-direct-dl-btn');
-
             if (img.dataset.objUrl) {
                 URL.revokeObjectURL(img.dataset.objUrl);
             }
@@ -384,21 +447,25 @@
             title.textContent = titleText;
             dlBtn.href = url;
             dlBtn.download = filename;
-
             modal.classList.remove('hidden');
         }
 
         function initThree() {
             const container = document.getElementById('canvas-container');
             const canvas = document.getElementById('three-canvas');
-
             scene = new THREE.Scene();
             scene.background = new THREE.Color('#09090B');
-
             camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
             camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
 
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+            // premultipliedAlpha: false にすることで透過ピクセル出力時の黒縁発生を防ぐ
+            renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                antialias: true,
+                alpha: true,
+                premultipliedAlpha: false,
+                preserveDrawingBuffer: true
+            });
             renderer.setClearColor(0x000000, 0);
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -412,7 +479,6 @@
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
             scene.add(ambientLight);
-
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
             dirLight.position.set(5, 12, 8);
             scene.add(dirLight);
@@ -430,7 +496,6 @@
 
             penlightGroup = new THREE.Group();
             scene.add(penlightGroup);
-
             headGroup = new THREE.Group();
             handleGroup = new THREE.Group();
             penlightGroup.add(headGroup);
@@ -464,7 +529,6 @@
             const rotZ = Math.sin(phase) * 0.42;
             const rotX = Math.sin(phase * 2) * 0.12 - 0.08;
             const posY = Math.abs(Math.cos(phase)) * 0.22;
-
             penlightGroup.rotation.z = rotZ;
             penlightGroup.rotation.x = rotX;
             penlightGroup.position.x = -Math.sin(rotZ) * (-pivotY);
@@ -485,13 +549,11 @@
                 penRot: penlightGroup.rotation.clone(),
                 penPos: penlightGroup.position.clone()
             };
-
             camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
             controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
             camera.lookAt(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
             camera.updateMatrixWorld();
             resetSwingPose();
-
             return savedState;
         }
 
@@ -517,10 +579,8 @@
             const savedView = setFixedFrontView();
 
             try {
-                // 1:1正方形アスペクト比で2000x2000px描画
                 camera.aspect = 1.0;
                 camera.updateProjectionMatrix();
-
                 scene.background = null;
                 renderer.setClearColor(0x000000, 0);
                 renderer.setPixelRatio(1);
@@ -533,7 +593,6 @@
                 renderer.render(scene, camera);
 
                 renderer.domElement.toBlob((blob) => {
-                    // プレビューサイズと状態を復元
                     scene.background = prevBg;
                     camera.aspect = prevAspect;
                     camera.updateProjectionMatrix();
@@ -564,21 +623,16 @@
 
         function animate() {
             requestAnimationFrame(animate);
-
-            if (!isRecordingGif) {
-                if (state.isSwinging) {
-                    swingPhase += 0.095;
-                    applySwingPose(swingPhase);
-                } else {
-                    penlightGroup.rotation.z += (0 - penlightGroup.rotation.z) * 0.15;
-                    penlightGroup.rotation.x += (0 - penlightGroup.rotation.x) * 0.15;
-                    penlightGroup.position.x += (0 - penlightGroup.position.x) * 0.15;
-                    penlightGroup.position.y += (0 - penlightGroup.position.y) * 0.15;
-                }
+            if (state.isSwinging) {
+                swingPhase += 0.095;
+                applySwingPose(swingPhase);
+            } else {
+                penlightGroup.rotation.z += (0 - penlightGroup.rotation.z) * 0.15;
+                penlightGroup.rotation.x += (0 - penlightGroup.rotation.x) * 0.15;
+                penlightGroup.position.x += (0 - penlightGroup.position.x) * 0.15;
+                penlightGroup.position.y += (0 - penlightGroup.position.y) * 0.15;
             }
-
             controls.update();
-
             if (composer) {
                 composer.render();
             } else {
@@ -590,7 +644,6 @@
             while (handleGroup.children.length > 0) {
                 handleGroup.remove(handleGroup.children[0]);
             }
-
             const gripMat = new THREE.MeshStandardMaterial({
                 color: 0xFFFFFF,
                 roughness: 0.35,
@@ -633,7 +686,6 @@
                 const cylRadius = 0.315;
                 const cylHeight = 1.8;
                 const arcLength = cylRadius * arcAngle;
-
                 const textTex = createHandleTextTexture(state.handleText, arcLength / cylHeight);
                 const textGeo = new THREE.CylinderGeometry(0.323, 0.295, cylHeight, 32, 1, true, -arcAngle / 2, arcAngle);
                 const textMat = new THREE.MeshBasicMaterial({
@@ -647,12 +699,10 @@
             }
         }
 
-        // 立体3Dリボン＆ブローチ生成（黒いリングや持ち手との干渉を完全解消）
         function buildHandleRibbon() {
             const ribGroup = new THREE.Group();
             const ribScale = 1.65;
             const ribPosZ = 0.345;
-            // 黒いリングの下端(y=-0.15)と交差しないよう、少し下げて配置
             ribGroup.position.set(0, -0.28, ribPosZ);
             ribGroup.scale.setScalar(ribScale);
 
@@ -674,7 +724,6 @@
                 metalness: 0.35
             });
 
-            // 持ち手をぐるっと巻くリボン帯（持ち手半径0.325より十分外側に配置しZファイティング防止）
             const bandRadiusTop = 0.348 / ribScale;
             const bandRadiusBottom = 0.344 / ribScale;
             const bandGeo = new THREE.CylinderGeometry(bandRadiusTop, bandRadiusBottom, 0.13, 32);
@@ -682,7 +731,6 @@
             bandMesh.position.set(0, 0.02, -ribPosZ / ribScale);
             ribGroup.add(bandMesh);
 
-            // 左右のふっくらしたリボン羽
             [-1, 1].forEach(side => {
                 const loopSideGroup = new THREE.Group();
                 loopSideGroup.position.set(side * 0.07, 0.02, 0.02);
@@ -779,7 +827,6 @@
                 ribGroup.add(loopSideGroup);
             });
 
-            // 中央の結び目
             const knotGeo = new THREE.CylinderGeometry(0.095, 0.105, 0.17, 24);
             knotGeo.scale(0.85, 1.0, 1.15);
             const knotMesh = new THREE.Mesh(knotGeo, ribMat);
@@ -794,7 +841,6 @@
                 ribGroup.add(crease);
             });
 
-            // 中央ブローチチャーム
             if (state.ribbonCharm !== 'none') {
                 const charmMesh = buildRibbonCharm(state.ribbonCharm, ribMat, goldTrimMat);
                 if (charmMesh) {
@@ -803,7 +849,6 @@
                 }
             }
 
-            // 下に垂れるリボン足
             [-1, 1].forEach(side => {
                 const tailShape = new THREE.Shape();
                 tailShape.moveTo(-0.045, 0);
@@ -863,7 +908,6 @@
                 const gemMesh = new THREE.Mesh(gemGeo, gemMat);
                 gemMesh.position.z = 0.006;
                 group.add(gemMesh);
-
                 group.scale.set(scale, scale, scale);
                 return group;
             }
@@ -936,11 +980,21 @@
             return charmGroup;
         }
 
+        // ② 文字入れマテリアル（transparent: true + premultipliedAlpha: false により保存時の黒縁を完全に解消）
+        function createHeadTextMaterial(textTex) {
+            return new THREE.MeshBasicMaterial({
+                map: textTex,
+                transparent: true,
+                depthTest: true,
+                depthWrite: false,
+                side: THREE.DoubleSide
+            });
+        }
+
         function buildHead() {
             while (headGroup.children.length > 0) {
                 headGroup.remove(headGroup.children[0]);
             }
-
             const baseColor = new THREE.Color(state.color);
             glowLight.color = baseColor;
 
@@ -969,7 +1023,6 @@
             if (state.shape === 'stick') {
                 const radius = 0.335;
                 const stickHeight = 3.64;
-
                 const stickGeo = new THREE.CylinderGeometry(radius, radius, stickHeight, 32);
                 const stickMesh = new THREE.Mesh(stickGeo, headMaterial);
                 stickMesh.position.y = 1.93;
@@ -992,18 +1045,10 @@
                     const textCylHeight = 3.2 * tSize;
                     const arcWidth = radius * arcAngle;
                     const aspectRatio = arcWidth / textCylHeight;
-
                     const textTex = createHeadTextTexture(state.headText, true, aspectRatio);
                     const thetaStart = -arcAngle / 2 + (tX * 1.1);
                     const textGeo = new THREE.CylinderGeometry(radius + 0.035, radius + 0.035, textCylHeight, 32, 1, true, thetaStart, arcAngle);
-                    const textMat = new THREE.MeshBasicMaterial({
-                        map: textTex,
-                        transparent: false,
-                        alphaTest: 0.15,
-                        depthTest: true,
-                        depthWrite: true,
-                        side: THREE.DoubleSide
-                    });
+                    const textMat = createHeadTextMaterial(textTex);
                     const textMesh = new THREE.Mesh(textGeo, textMat);
                     textMesh.position.y = 1.95 + tY;
                     textMesh.frustumCulled = false;
@@ -1013,7 +1058,6 @@
             } else if (state.shape === 'sphere') {
                 const sphereRadius = 1.42;
                 const sphereCenterY = 0.15 + sphereRadius - 0.08;
-
                 const sphereGeo = new THREE.SphereGeometry(sphereRadius, 48, 36);
                 const sphereMesh = new THREE.Mesh(sphereGeo, headMaterial);
                 sphereMesh.position.y = sphereCenterY;
@@ -1025,7 +1069,6 @@
                 auraMesh1.userData.isAura = true;
                 headGroup.add(auraMesh1);
 
-                // 黒いリング(半径0.36)の内側へしっかり差し込み、同平面のZファイティングを防止
                 const neckGeo = new THREE.CylinderGeometry(0.42, 0.33, 0.28, 32);
                 const neckMesh = new THREE.Mesh(neckGeo, headMaterial);
                 neckMesh.position.y = 0.24;
@@ -1036,25 +1079,16 @@
                     const plateW = 2.05 * tSize;
                     const plateH = 1.2 * tSize;
                     const textTex = createHeadTextTexture(state.headText, false, plateW / plateH);
-
                     const phiLength = Math.min(Math.PI * 0.95, Math.PI * 0.56 * tSize);
                     const thetaLength = Math.min(Math.PI * 0.85, Math.PI * 0.36 * tSize);
                     const phiStart = Math.PI / 2 - phiLength / 2 + (tX / sphereRadius);
                     const thetaStart = Math.max(0.1, Math.min(Math.PI - thetaLength - 0.1, Math.PI / 2 - thetaLength / 2 - (tY / sphereRadius)));
-
                     const textSphereGeo = new THREE.SphereGeometry(
                         sphereRadius + 0.04, 32, 24,
                         phiStart, phiLength,
                         thetaStart, thetaLength
                     );
-                    const textMat = new THREE.MeshBasicMaterial({
-                        map: textTex,
-                        transparent: false,
-                        alphaTest: 0.15,
-                        depthTest: true,
-                        depthWrite: true,
-                        side: THREE.DoubleSide
-                    });
+                    const textMat = createHeadTextMaterial(textTex);
                     const textMesh = new THREE.Mesh(textSphereGeo, textMat);
                     textMesh.position.y = sphereCenterY;
                     textMesh.frustumCulled = false;
@@ -1073,7 +1107,6 @@
                     bevelSize: 0.03,
                     bevelSegments: 3
                 };
-
                 const headGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
                 headGeo.translate(0, 0, -0.08);
                 const headMesh = new THREE.Mesh(headGeo, headMaterial);
@@ -1143,7 +1176,6 @@
                 const rEar = 0.54;
                 const cxEar = 1.12;
                 const cyEar = 2.58;
-
                 const dx = cxEar;
                 const dy = cyEar - cyFace;
                 const d = Math.hypot(dx, dy);
@@ -1153,7 +1185,6 @@
                 const ym = cyFace + (a / d) * dy;
                 const rx = -(dy / d) * h;
                 const ry = (dx / d) * h;
-
                 const pLow = { x: xm - rx, y: ym - ry };
                 const pHigh = { x: xm + rx, y: ym + ry };
 
@@ -1161,12 +1192,10 @@
                 const faceTopRightAngle = Math.atan2(pHigh.y - cyFace, pHigh.x);
                 const faceTopLeftAngle = Math.PI - faceTopRightAngle;
                 const faceLeftAngle = Math.PI - faceRightAngle;
-
                 const rightEarStartAngle = Math.atan2(pLow.y - cyEar, pLow.x - cxEar);
                 const rightEarEndAngle = Math.atan2(pHigh.y - cyEar, pHigh.x - cxEar);
                 const leftEarStartAngle = Math.atan2(pHigh.y - cyEar, -pHigh.x + cxEar);
                 const leftEarEndAngle = Math.atan2(pLow.y - cyEar, -pLow.x + cxEar);
-
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
 
@@ -1205,7 +1234,6 @@
                 const cyFace = 1.42;
                 const aLow = 0.44;
                 const aHigh = 1.08;
-
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
 
@@ -1248,17 +1276,9 @@
             const { size: tSize, x: tX, y: tY } = state.textConfig;
             const plateW = 1.95 * tSize;
             const plateH = 1.15 * tSize;
-
             const textTex = createHeadTextTexture(state.headText, false, plateW / plateH);
             const textPlaneGeo = new THREE.PlaneGeometry(plateW, plateH);
-            const textMat = new THREE.MeshBasicMaterial({
-                map: textTex,
-                transparent: false,
-                alphaTest: 0.15,
-                depthTest: true,
-                depthWrite: true,
-                side: THREE.DoubleSide
-            });
+            const textMat = createHeadTextMaterial(textTex);
             const textMesh = new THREE.Mesh(textPlaneGeo, textMat);
             textMesh.position.set(tX, posY + tY, posZ + 0.05);
             textMesh.frustumCulled = false;
@@ -1269,7 +1289,6 @@
         function createSingleContourShape(type, baseConnectWidth) {
             const shape = new THREE.Shape();
             const halfW = baseConnectWidth / 2;
-
             if (type === 'heart') {
                 shape.moveTo(-halfW, 0);
                 shape.lineTo(halfW, 0);
@@ -1283,7 +1302,6 @@
                 const innerRadius = 0.78;
                 const offsetY = 1.82;
                 const pts = [];
-
                 for (let i = 0; i < spikes * 2; i++) {
                     const radius = i % 2 === 0 ? outerRadius : innerRadius;
                     const angle = (i * Math.PI) / spikes + Math.PI / 2;
@@ -1292,7 +1310,6 @@
                         y: Math.sin(angle) * radius + offsetY
                     });
                 }
-
                 shape.moveTo(-halfW, 0);
                 shape.lineTo(halfW, 0);
                 shape.lineTo(halfW * 0.9, 0.75);
@@ -1316,7 +1333,7 @@
             return shape;
         }
 
-        // 文字列をHTMLではなくCanvas上で画像ピクセルとして描画（コード実行は一切発生しない）
+        // 文字列をCanvas上で白文字として描画
         function createHeadTextTexture(text, isVertical, aspectRatio = 1) {
             const safeText = sanitizeUserText(text, 24);
             const canvas = document.createElement('canvas');
@@ -1329,7 +1346,6 @@
             }
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
@@ -1348,7 +1364,6 @@
                 }
                 fontSize = Math.max(20, fontSize);
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
                 const totalHeight = chars.length * fontSize * lineHeightRatio;
                 let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
 
@@ -1396,6 +1411,7 @@
             }
 
             const texture = new THREE.CanvasTexture(canvas);
+            texture.premultiplyAlpha = false;
             texture.needsUpdate = true;
             return texture;
         }
@@ -1411,17 +1427,14 @@
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(Math.PI / 2);
-
             let fontSize = Math.min(canvas.width * 0.65, 42);
             ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
             const maxW = canvas.height * 0.85;
             const measuredW = ctx.measureText(safeText).width;
             if (measuredW > maxW) {
                 fontSize = Math.floor(fontSize * (maxW / measuredW));
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
             }
-
             ctx.fillStyle = '#3F3F46';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -1435,14 +1448,12 @@
 
         function setupUI() {
             const shapeBtns = document.querySelectorAll('.shape-btn');
-
             shapeBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     shapeBtns.forEach(b => {
                         b.className = 'shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap';
                     });
                     btn.className = 'shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-zinc-900 text-white border-zinc-900 whitespace-nowrap';
-
                     state.shape = btn.dataset.shape;
                     buildHead();
                 });
@@ -1450,12 +1461,10 @@
 
             const colorPicker = document.getElementById('color-picker');
             const colorHex = document.getElementById('color-hex');
-
             function updateColor(newColor) {
                 state.color = newColor.toUpperCase();
                 colorPicker.value = state.color;
                 colorHex.textContent = state.color;
-
                 const threeColor = new THREE.Color(state.color);
                 if (headMaterial) {
                     headMaterial.color = threeColor;
@@ -1468,7 +1477,6 @@
                     glowLight.color = threeColor;
                 }
             }
-
             colorPicker.addEventListener('input', (e) => updateColor(e.target.value));
             document.querySelectorAll('#preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateColor(btn.dataset.color));
@@ -1507,7 +1515,6 @@
                 buildHandle();
             });
 
-            // 持ち手リボン装飾UI制御
             const toggleRibbonBtn = document.getElementById('toggle-ribbon-btn');
             const ribbonControls = document.getElementById('ribbon-controls');
             const ribbonColorPicker = document.getElementById('ribbon-color-picker');
@@ -1533,7 +1540,6 @@
                 ribbonColorHex.textContent = state.ribbonColor;
                 buildHandle();
             }
-
             ribbonColorPicker.addEventListener('input', (e) => updateRibbonColor(e.target.value));
             document.querySelectorAll('#ribbon-preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateRibbonColor(btn.dataset.color));
@@ -1559,7 +1565,6 @@
             const toggleSwingBtn = document.getElementById('toggle-swing-btn');
             const swingIcon = document.getElementById('swing-icon');
             const swingLabel = document.getElementById('swing-label');
-
             toggleSwingBtn.addEventListener('click', () => {
                 state.isSwinging = !state.isSwinging;
                 if (state.isSwinging) {
@@ -1591,8 +1596,6 @@
                 controls.update();
             });
 
-            document.getElementById('save-img-btn').addEventListener('click', saveImage);
-            document.getElementById('save-gif-btn').addEventListener('click', saveLoopGif);
             document.getElementById('share-btn').addEventListener('click', shareImage);
 
             document.getElementById('close-modal-btn').addEventListener('click', () => {
@@ -1603,16 +1606,33 @@
                     document.getElementById('media-modal').classList.add('hidden');
                 }
             });
+
+            // 利用規約モーダルの開閉
+            const termsModal = document.getElementById('terms-modal');
+            document.getElementById('open-terms-btn').addEventListener('click', () => {
+                termsModal.classList.remove('hidden');
+            });
+            document.getElementById('close-terms-btn').addEventListener('click', () => {
+                termsModal.classList.add('hidden');
+            });
+            document.getElementById('accept-terms-btn').addEventListener('click', () => {
+                termsModal.classList.add('hidden');
+            });
+            termsModal.addEventListener('click', (e) => {
+                if (e.target.id === 'terms-modal') {
+                    termsModal.classList.add('hidden');
+                }
+            });
+
             document.getElementById('modal-native-share-btn').addEventListener('click', async () => {
                 if (!currentModalBlob) return;
                 const file = new File([currentModalBlob], currentModalFilename, { type: currentModalBlob.type });
-                const shareText = '#まや式サイリウムメーカー\nでサイリウムを作りました！\nhttps://sayamamaya.github.io/MayaCyalumeMaker/\nXのフォロー＋下記ポスト❤️♻️で利用◎\n後でポストリンク差し替え';
                 if (navigator.share) {
                     try {
                         if (navigator.canShare && navigator.canShare({ files: [file] })) {
                             await navigator.share({
-                                title: 'オリジナルペンライト',
-                                text: shareText,
+                                title: 'まや式ペンライトメーカー',
+                                text: SHARE_POST_TEXT,
                                 files: [file]
                             });
                             return;
@@ -1625,114 +1645,17 @@
             });
         }
 
-        function saveImage() {
-            showToast('2000×2000pxの透過静止画を生成中...');
-            renderSquareExportBlob((blob) => {
-                if (!blob) return;
-                const filename = `my_penlight_${Date.now()}.png`;
-                openMediaModal(blob, filename, '透過静止画（2000×2000px）の保存・共有');
-
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-            });
-        }
-
-        async function saveLoopGif() {
-            if (isRecordingGif) return;
-            if (typeof GIF === 'undefined') {
-                showToast('GIF生成ライブラリの読み込みに失敗しました');
-                return;
-            }
-
-            isRecordingGif = true;
-            const savedView = setFixedFrontView();
-            showToast('ループGIFを生成中...（数秒お待ちください）');
-
-            try {
-                const workerRes = await fetch('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
-                const workerText = await workerRes.text();
-                const workerBlob = new Blob([workerText], { type: 'application/javascript' });
-                const workerUrl = URL.createObjectURL(workerBlob);
-
-                const srcCanvas = renderer.domElement;
-                const gifW = 360;
-                const gifH = Math.round(gifW * (srcCanvas.height / srcCanvas.width));
-
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = gifW;
-                tempCanvas.height = gifH;
-                const tempCtx = tempCanvas.getContext('2d');
-
-                const gif = new GIF({
-                    workers: 2,
-                    quality: 10,
-                    width: gifW,
-                    height: gifH,
-                    workerScript: workerUrl
-                });
-
-                const totalFrames = 24;
-                for (let i = 0; i < totalFrames; i++) {
-                    const phase = (i / totalFrames) * Math.PI * 2;
-                    applySwingPose(phase);
-                    if (composer) composer.render();
-                    else renderer.render(scene, camera);
-
-                    tempCtx.clearRect(0, 0, gifW, gifH);
-                    tempCtx.drawImage(srcCanvas, 0, 0, gifW, gifH);
-                    gif.addFrame(tempCtx, { copy: true, delay: 40 });
-                }
-
-                gif.on('finished', function (blob) {
-                    URL.revokeObjectURL(workerUrl);
-                    const filename = `penlight_loop_${Date.now()}.gif`;
-
-                    isRecordingGif = false;
-                    restoreViewState(savedView);
-                    if (!state.isSwinging) resetSwingPose();
-
-                    openMediaModal(blob, filename, 'ループGIFの保存・共有');
-
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.style.display = 'none';
-                    link.href = url;
-                    link.download = filename;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                });
-
-                gif.render();
-            } catch (e) {
-                console.error(e);
-                isRecordingGif = false;
-                restoreViewState(savedView);
-                if (!state.isSwinging) resetSwingPose();
-                showToast('GIF生成中にエラーが発生しました');
-            }
-        }
-
         async function shareImage() {
             showToast('2000×2000pxの透過画像を準備中...');
             renderSquareExportBlob(async (blob) => {
                 if (!blob) return;
                 const filename = `my_penlight_${Date.now()}.png`;
                 const file = new File([blob], filename, { type: 'image/png' });
-                const shareText = '#まや式サイリウムメーカー\nでサイリウムを作りました！\nhttps://sayamamaya.github.io/MayaCyalumeMaker/\nXのフォロー＋下記ポスト❤️♻️で利用◎\n後でポストリンク差し替え';
-
                 if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
                         await navigator.share({
-                            title: 'オリジナルペンライト',
-                            text: shareText,
+                            title: 'まや式ペンライトメーカー',
+                            text: SHARE_POST_TEXT,
                             files: [file]
                         });
                         return;
@@ -1740,7 +1663,7 @@
                         if (err.name === 'AbortError') return;
                     }
                 }
-                openMediaModal(blob, filename, '透過画像（2000×2000px）の保存・共有');
+                openMediaModal(blob, filename, '共有・保存用画像（2000×2000px）');
             });
         }
 
