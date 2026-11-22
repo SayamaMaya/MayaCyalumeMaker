@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オリジナルGLBペンライトメーカー</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Zen Maru Gothic（丸ゴシック） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Three.js & GLTFExporter & PostProcessing (Bloom) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <!-- GIF生成ライブラリ (gif.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background-color: #FAFAFA;
+            color: #18181B;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* カスタムカラーピッカーのスタイリング */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid #E4E4E7;
+            border-radius: 50%;
+        }
+
+        /* カスタムスクロールバー */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4F4F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4D4D8;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-4 sm:px-6">
+
+    <!-- メインコンテナ（清潔感のある白ベースUI） -->
+    <div class="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
+        
+        <!-- ヘッダー -->
+        <header class="text-center border-b border-zinc-100 pb-3">
+            <h1 class="text-xl font-bold tracking-wider text-zinc-900">PENLIGHT MAKER</h1>
+            <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆GLB出力</p>
+        </header>
+
+        <!-- プレビュー（常に上部で固定表示・操作しながらリアルタイム確認可能） -->
+        <section class="sticky top-2 z-30 bg-white/95 backdrop-blur-sm pb-2 pt-1 flex flex-col gap-1.5 border-b border-zinc-100">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xs font-bold text-zinc-800">プレビュー（暗転モード）</h2>
+                <span class="text-[10px] text-zinc-400">ドラッグで回転・ピンチで拡大</span>
+            </div>
+            
+            <!-- 3Dキャンバスコンテナ（プレビュー内のみ暗転背景） -->
+            <div class="relative w-full h-64 sm:h-72 bg-zinc-950 border border-zinc-200 rounded-2xl overflow-hidden shadow-inner" id="canvas-container">
+                <canvas id="three-canvas" class="w-full h-full block outline-none"></canvas>
+                
+                <!-- プレビューコントロール（右上：振りアニメーションボタン） -->
+                <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
+                    <button type="button" id="toggle-swing-btn" class="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 text-[11px] font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+                        <span id="swing-icon" class="text-xs">▶</span>
+                        <span id="swing-label">振る</span>
+                    </button>
+                </div>
+
+                <!-- プレビューの位置・視点リセットボタン（左下） -->
+                <button type="button" id="reset-pos-btn" class="absolute bottom-2.5 left-2.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 text-[11px] font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1 z-10 whitespace-nowrap" title="位置と視点をリセット">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                    <span>初期位置</span>
+                </button>
+
+                <!-- カメラアングルリセット（右下） -->
+                <button type="button" id="reset-cam-btn" class="absolute bottom-2.5 right-2.5 p-2 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 hover:bg-white transition-all shadow-sm z-10" title="アングルを正面に戻す">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- ① デザインを選択 -->
+        <section class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">1</span>
+                <h2 class="text-sm font-bold text-zinc-800">デザインを選択</h2>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-2" id="shape-buttons">
+                <button type="button" data-shape="stick" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all shadow-sm bg-zinc-900 text-white border-zinc-900 whitespace-nowrap">
+                    棒
+                </button>
+                <button type="button" data-shape="heart" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    ハート
+                </button>
+                <button type="button" data-shape="star" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    星
+                </button>
+                <button type="button" data-shape="circle" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    丸
+                </button>
+                <button type="button" data-shape="sphere" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    球
+                </button>
+                <button type="button" data-shape="bear" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    くま
+                </button>
+                <button type="button" data-shape="cat" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    猫
+                </button>
+                <button type="button" data-shape="dog" class="shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap">
+                    犬
+                </button>
+                <button type="button" data-shape="acrylic" class="shape-btn col-span-4 py-2.5 px-3 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 flex items-center justify-center gap-1.5 whitespace-nowrap">
+                    <svg class="w-4 h-4 text-pink-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="whitespace-nowrap">画像から作成（アクスタ風）</span>
+                </button>
+            </div>
+
+            <!-- アクスタ用画像アップロード（「画像」選択時のみ表示） -->
+            <div id="acrylic-upload-box" class="hidden flex flex-col gap-2.5 p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl mt-1">
+                <label class="text-[11px] font-bold text-zinc-700">
+                    アクスタ用画像（透過PNG推奨）
+                </label>
+                <input type="file" id="acrylic-file-input" accept="image/*" class="w-full text-xs text-zinc-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-zinc-900 file:text-white hover:file:bg-zinc-800 file:cursor-pointer">
+                <label class="flex items-center gap-2 text-[11px] text-zinc-600 cursor-pointer">
+                    <input type="checkbox" id="acrylic-remove-white" class="rounded accent-zinc-900">
+                    <span>白背景を自動で透明にする（JPEGなど背景が白い画像用）</span>
+                </label>
+                
+                <!-- アクスタ画像の位置・サイズ調整コントロール -->
+                <div id="acrylic-controls" class="hidden flex flex-col gap-2 pt-2 border-t border-zinc-200">
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-[11px] text-zinc-500">
+                            <span>アクスタサイズ</span>
+                            <span id="acrylic-size-val">1.00</span>
+                        </div>
+                        <input type="range" id="acrylic-size-slider" min="0.4" max="2.2" step="0.05" value="1.0" class="accent-zinc-900 cursor-pointer">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-[11px] text-zinc-500">
+                            <span>左右位置</span>
+                            <span id="acrylic-x-val">0.00</span>
+                        </div>
+                        <input type="range" id="acrylic-x-slider" min="-1.5" max="1.5" step="0.05" value="0.0" class="accent-zinc-900 cursor-pointer">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex justify-between text-[11px] text-zinc-500">
+                            <span>上下位置</span>
+                            <span id="acrylic-y-val">1.75</span>
+                        </div>
+                        <input type="range" id="acrylic-y-slider" min="0.2" max="3.5" step="0.05" value="1.75" class="accent-zinc-900 cursor-pointer">
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-zinc-400 leading-tight pt-1">
+                    ※ご自身に著作権のある、または著作者から許可の得ている画像のみアップロードしてください。
+                </p>
+            </div>
+        </section>
+
+        <!-- ② 発光カラーを選択 -->
+        <section class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">2</span>
+                <h2 class="text-sm font-bold text-zinc-800">発光カラーを選択</h2>
+            </div>
+
+            <div class="flex items-center justify-between bg-zinc-50 border border-zinc-200 rounded-2xl p-3">
+                <div class="flex items-center gap-3">
+                    <input type="color" id="color-picker" value="#FF4D8D">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-zinc-800">カスタムカラー</span>
+                        <span id="color-hex" class="text-[11px] text-zinc-400 font-mono">#FF4D8D</span>
+                    </div>
+                </div>
+                <!-- プリセットカラー -->
+                <div class="flex gap-1.5" id="preset-colors">
+                    <button type="button" data-color="#FF4D8D" class="w-6 h-6 rounded-full border border-zinc-200 bg-[#FF4D8D] hover:scale-110 transition-transform" aria-label="ピンク"></button>
+                    <button type="button" data-color="#3B82F6" class="w-6 h-6 rounded-full border border-zinc-200 bg-[#3B82F6] hover:scale-110 transition-transform" aria-label="ブルー"></button>
+                    <button type="button" data-color="#FACC15" class="w-6 h-6 rounded-full border border-zinc-200 bg-[#FACC15] hover:scale-110 transition-transform" aria-label="イエロー"></button>
+                    <button type="button" data-color="#10B981" class="w-6 h-6 rounded-full border border-zinc-200 bg-[#10B981] hover:scale-110 transition-transform" aria-label="グリーン"></button>
+                    <button type="button" data-color="#FFFFFF" class="w-6 h-6 rounded-full border border-zinc-300 bg-white hover:scale-110 transition-transform" aria-label="ホワイト"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ③ デザイン部分の文字入れ -->
+        <section id="text-input-section" class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">3</span>
+                <h2 class="text-sm font-bold text-zinc-800">デザイン部分の文字（推しの名前など）</h2>
+            </div>
+            <input type="text" id="head-text" placeholder="例：〇〇ちゃんだいすき / 推ししか勝たん" maxlength="24"
+                class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
+            
+            <!-- 文字の位置・サイズ調整コントロール -->
+            <div id="text-controls" class="hidden flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-2xl mt-1">
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between text-[11px] text-zinc-500">
+                        <span>文字サイズ</span>
+                        <span id="text-size-val">1.00</span>
+                    </div>
+                    <input type="range" id="text-size-slider" min="0.5" max="1.8" step="0.05" value="1.0" class="accent-zinc-900 cursor-pointer">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between text-[11px] text-zinc-500">
+                        <span>左右位置</span>
+                        <span id="text-x-val">0.00</span>
+                    </div>
+                    <input type="range" id="text-x-slider" min="-1.0" max="1.0" step="0.05" value="0.0" class="accent-zinc-900 cursor-pointer">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between text-[11px] text-zinc-500">
+                        <span>上下位置</span>
+                        <span id="text-y-val">0.00</span>
+                    </div>
+                    <input type="range" id="text-y-slider" min="-1.2" max="1.2" step="0.05" value="0.0" class="accent-zinc-900 cursor-pointer">
+                </div>
+            </div>
+        </section>
+
+        <!-- ④ 画像デコレーション（1個追加するごとに次の枠が出現・最大3枚） -->
+        <section class="flex flex-col gap-2.5 border-t border-zinc-100 pt-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">4</span>
+                    <h2 class="text-sm font-bold text-zinc-800">デコ画像（最大3枚まで貼る）</h2>
+                </div>
+            </div>
+            <p class="text-[10px] text-zinc-400 leading-tight">
+                ※ご自身に著作権のある、または著作者から許可の得ている画像のみアップロードしてください。
+            </p>
+
+            <!-- ステッカー動的生成コンテナ（最初は1つだけ表示） -->
+            <div id="decals-container" class="flex flex-col gap-2.5"></div>
+        </section>
+
+        <!-- ⑤ 持ち手の名前 -->
+        <section class="flex flex-col gap-2 border-t border-zinc-100 pt-4">
+            <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-zinc-900 text-white text-xs flex items-center justify-center font-bold">5</span>
+                <h2 class="text-sm font-bold text-zinc-800">持ち手の名前（自分の名前など）</h2>
+            </div>
+            <input type="text" id="handle-text" placeholder="例：HANAKO / 2026.11.16" maxlength="20"
+                class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
+        </section>
+
+        <!-- ダウンロード / 画像を保存・共有 -->
+        <section class="flex flex-col gap-2.5 pt-2 border-t border-zinc-100">
+            <!-- GLBダウンロード -->
+            <button type="button" id="download-glb-btn" class="w-full py-3.5 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 active:scale-[0.99] text-white text-sm font-bold flex items-center justify-center gap-2 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>GLBデータをダウンロード</span>
+            </button>
+
+            <!-- 画像・GIF保存・共有 -->
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" id="save-img-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>静止画保存</span>
+                </button>
+                <button type="button" id="save-gif-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>ループGIF</span>
+                </button>
+                <button type="button" id="share-btn" class="w-full py-3 px-2 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 active:scale-[0.99] text-zinc-800 text-[11px] font-bold flex items-center justify-center gap-1 transition-all">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    <span>共有 / 画像出力</span>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- 画像・GIF保存＆共有用プレビューモーダル（WebView制限回避用） -->
+    <div id="media-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white border border-zinc-200 rounded-3xl max-w-sm w-full p-5 flex flex-col items-center gap-4 shadow-2xl">
+            <div class="w-full flex items-center justify-between border-b border-zinc-100 pb-2">
+                <h3 id="modal-title" class="text-sm font-bold text-zinc-900">保存・共有用画像</h3>
+                <button type="button" id="close-modal-btn" class="p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <p class="text-xs text-zinc-600 text-center leading-relaxed bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 w-full">
+                下の画像を<span class="font-bold text-zinc-900">長押し</span>すると<br>スマホへの保存やSNS共有が確実にできます！
+            </p>
+
+            <div class="w-full rounded-2xl overflow-hidden border border-zinc-200 flex items-center justify-center" style="background-color: #f4f4f5; background-image: linear-gradient(45deg, #e4e4e7 25%, transparent 25%), linear-gradient(-45deg, #e4e4e7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e4e4e7 75%), linear-gradient(-45deg, transparent 75%, #e4e4e7 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0px;">
+                <img id="modal-preview-img" src="" alt="ペンライト画像" class="max-h-72 w-auto object-contain">
+            </div>
+
+            <div class="w-full grid grid-cols-2 gap-2">
+                <button type="button" id="modal-native-share-btn" class="py-2.5 px-3 rounded-xl bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-800 transition-colors">
+                    共有メニューを開く
+                </button>
+                <a id="modal-direct-dl-btn" href="#" download="penlight.png" class="py-2.5 px-3 rounded-xl border border-zinc-200 bg-white text-zinc-800 text-xs font-bold text-center hover:bg-zinc-50 transition-colors">
+                    ファイル保存を試す
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- トースト通知用コンテナ -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs font-bold px-5 py-3 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 z-50 whitespace-nowrap shadow-lg">
+        通知メッセージ
+    </div>
+
+    <script>
+        // アプリケーションの状態管理
+        const state = {
+            shape: 'stick', // 'stick', 'heart', 'star', 'circle', 'sphere', 'bear', 'cat', 'dog', 'acrylic'
+            color: '#FF4D8D',
+            headText: '',
+            textConfig: {
+                size: 1.0,
+                x: 0.0,
+                y: 0.0
+            },
+            handleText: '',
+            isSwinging: false,
+            acrylicRawFile: null,
+            acrylicData: null,
+            acrylicConfig: {
+                size: 1.0,
+                x: 0.0,
+                y: 1.75
+            },
+            decals: [
+                { rawFile: null, dataUrl: null, imgElement: null, aspect: 1, size: 1.0, x: 0.0, y: 1.6, removeWhite: false },
+                { rawFile: null, dataUrl: null, imgElement: null, aspect: 1, size: 1.0, x: 0.0, y: 1.6, removeWhite: false },
+                { rawFile: null, dataUrl: null, imgElement: null, aspect: 1, size: 1.0, x: 0.0, y: 1.6, removeWhite: false }
+            ]
+        };
+
+        const DEFAULT_CAM_POS = { x: 0, y: 1.0, z: 12.0 };
+        const DEFAULT_CAM_TARGET = { x: 0, y: 0.85, z: 0 };
+
+        let scene, camera, renderer, controls, composer, bloomPass;
+        let penlightGroup, headGroup, handleGroup;
+        let headMaterial, auraMaterial, glowLight;
+        let swingPhase = 0;
+        let isRecordingGif = false;
+        let currentModalBlob = null;
+        let currentModalFilename = 'penlight.png';
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        function openMediaModal(blob, filename, titleText) {
+            currentModalBlob = blob;
+            currentModalFilename = filename;
+            const url = URL.createObjectURL(blob);
+
+            const modal = document.getElementById('media-modal');
+            const img = document.getElementById('modal-preview-img');
+            const title = document.getElementById('modal-title');
+            const dlBtn = document.getElementById('modal-direct-dl-btn');
+
+            if (img.dataset.objUrl) {
+                URL.revokeObjectURL(img.dataset.objUrl);
+            }
+            img.src = url;
+            img.dataset.objUrl = url;
+            title.textContent = titleText;
+            dlBtn.href = url;
+            dlBtn.download = filename;
+
+            modal.classList.remove('hidden');
+        }
+
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('three-canvas');
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color('#09090B');
+
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+            renderer.setClearColor(0x000000, 0);
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 4;
+            controls.maxDistance = 18;
+            controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+            dirLight.position.set(5, 12, 8);
+            scene.add(dirLight);
+
+            if (typeof THREE.EffectComposer !== 'undefined' && typeof THREE.UnrealBloomPass !== 'undefined') {
+                const renderScene = new THREE.RenderPass(scene, camera);
+                bloomPass = new THREE.UnrealBloomPass(
+                    new THREE.Vector2(container.clientWidth, container.clientHeight),
+                    0.45, 0.6, 0.88
+                );
+                composer = new THREE.EffectComposer(renderer);
+                composer.addPass(renderScene);
+                composer.addPass(bloomPass);
+            }
+
+            penlightGroup = new THREE.Group();
+            scene.add(penlightGroup);
+
+            headGroup = new THREE.Group();
+            handleGroup = new THREE.Group();
+            penlightGroup.add(headGroup);
+            penlightGroup.add(handleGroup);
+
+            glowLight = new THREE.PointLight(state.color, 1.0, 10);
+            glowLight.position.set(0, 2.4, 0.5);
+            penlightGroup.add(glowLight);
+
+            buildHandle();
+            buildHead();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            if (composer) {
+                composer.setSize(container.clientWidth, container.clientHeight);
+            }
+        }
+
+        function applySwingPose(phase) {
+            if (!penlightGroup) return;
+            const pivotY = -2.2;
+            const rotZ = Math.sin(phase) * 0.42;
+            const rotX = Math.sin(phase * 2) * 0.12 - 0.08;
+            const posY = Math.abs(Math.cos(phase)) * 0.22;
+
+            penlightGroup.rotation.z = rotZ;
+            penlightGroup.rotation.x = rotX;
+            penlightGroup.position.x = -Math.sin(rotZ) * (-pivotY);
+            penlightGroup.position.y = posY + (Math.cos(rotZ) - 1) * (-pivotY);
+        }
+
+        function resetSwingPose() {
+            if (!penlightGroup) return;
+            penlightGroup.rotation.set(0, 0, 0);
+            penlightGroup.position.set(0, 0, 0);
+        }
+
+        function setFixedFrontView() {
+            const savedState = {
+                camPos: camera.position.clone(),
+                camQuat: camera.quaternion.clone(),
+                target: controls.target.clone(),
+                penRot: penlightGroup.rotation.clone(),
+                penPos: penlightGroup.position.clone()
+            };
+            camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
+            controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
+            camera.lookAt(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
+            camera.updateMatrixWorld();
+            resetSwingPose();
+            return savedState;
+        }
+
+        function restoreViewState(savedState) {
+            if (!savedState) return;
+            camera.position.copy(savedState.camPos);
+            camera.quaternion.copy(savedState.camQuat);
+            controls.target.copy(savedState.target);
+            controls.update();
+            penlightGroup.rotation.copy(savedState.penRot);
+            penlightGroup.position.copy(savedState.penPos);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!isRecordingGif) {
+                if (state.isSwinging) {
+                    swingPhase += 0.095;
+                    applySwingPose(swingPhase);
+                } else {
+                    penlightGroup.rotation.z += (0 - penlightGroup.rotation.z) * 0.15;
+                    penlightGroup.rotation.x += (0 - penlightGroup.rotation.x) * 0.15;
+                    penlightGroup.position.x += (0 - penlightGroup.position.x) * 0.15;
+                    penlightGroup.position.y += (0 - penlightGroup.position.y) * 0.15;
+                }
+            }
+            controls.update();
+            if (composer) {
+                composer.render();
+            } else {
+                renderer.render(scene, camera);
+            }
+        }
+
+        function buildHandle() {
+            while (handleGroup.children.length > 0) {
+                handleGroup.remove(handleGroup.children[0]);
+            }
+
+            const gripMat = new THREE.MeshStandardMaterial({
+                color: 0xFFFFFF,
+                roughness: 0.35,
+                metalness: 0.05
+            });
+            const gripGeo = new THREE.CylinderGeometry(0.33, 0.28, 2.4, 32);
+            const gripMesh = new THREE.Mesh(gripGeo, gripMat);
+            gripMesh.position.y = -1.2;
+            handleGroup.add(gripMesh);
+
+            const ringMat = new THREE.MeshStandardMaterial({
+                color: 0x3F3F46,
+                roughness: 0.25,
+                metalness: 0.2
+            });
+            const ringGeo = new THREE.CylinderGeometry(0.36, 0.35, 0.3, 32);
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh.position.y = 0.0;
+            handleGroup.add(ringMesh);
+
+            const capGeo = new THREE.CylinderGeometry(0.28, 0.27, 0.15, 32);
+            const capMesh = new THREE.Mesh(capGeo, ringMat);
+            capMesh.position.y = -2.45;
+            handleGroup.add(capMesh);
+
+            const btnMat = new THREE.MeshStandardMaterial({ color: 0x27272A, roughness: 0.2 });
+            const btnGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.05, 16);
+            btnGeo.rotateX(Math.PI / 2);
+            const btnMesh = new THREE.Mesh(btnGeo, btnMat);
+            btnMesh.position.set(0, -0.45, 0.31);
+            handleGroup.add(btnMesh);
+
+            if (state.handleText.trim() !== '') {
+                const arcAngle = Math.PI * 0.55;
+                const cylRadius = 0.315;
+                const cylHeight = 1.8;
+                const arcLength = cylRadius * arcAngle;
+                const textTex = createHandleTextTexture(state.handleText, arcLength / cylHeight);
+                const textGeo = new THREE.CylinderGeometry(0.323, 0.295, cylHeight, 32, 1, true, -arcAngle / 2, arcAngle);
+                const textMat = new THREE.MeshBasicMaterial({
+                    map: textTex,
+                    transparent: true,
+                    depthWrite: false
+                });
+                const textMesh = new THREE.Mesh(textGeo, textMat);
+                textMesh.position.y = -1.2;
+                handleGroup.add(textMesh);
+            }
+        }
+
+        function buildHead() {
+            while (headGroup.children.length > 0) {
+                headGroup.remove(headGroup.children[0]);
+            }
+
+            const baseColor = new THREE.Color(state.color);
+            glowLight.color = baseColor;
+
+            headMaterial = new THREE.MeshStandardMaterial({
+                color: baseColor,
+                emissive: baseColor,
+                emissiveIntensity: 0.78,
+                roughness: 0.2,
+                metalness: 0.1,
+                transparent: true,
+                opacity: 0.94,
+                depthWrite: true
+            });
+
+            auraMaterial = new THREE.MeshBasicMaterial({
+                color: baseColor,
+                transparent: true,
+                opacity: 0.22,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                side: THREE.FrontSide
+            });
+
+            const baseConnectWidth = 0.72;
+
+            if (state.shape === 'stick') {
+                const radius = 0.35;
+                const stickHeight = 3.6;
+                const stickGeo = new THREE.CylinderGeometry(radius, radius, stickHeight, 32);
+                const stickMesh = new THREE.Mesh(stickGeo, headMaterial);
+                stickMesh.position.y = 1.95;
+                headGroup.add(stickMesh);
+
+                const auraGeo1 = new THREE.CylinderGeometry(radius * 1.18, radius * 1.18, stickHeight + 0.08, 32);
+                const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
+                auraMesh1.position.y = 1.95;
+                auraMesh1.userData.isAura = true;
+                headGroup.add(auraMesh1);
+
+                const domeGeo = new THREE.SphereGeometry(radius, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+                const domeMesh = new THREE.Mesh(domeGeo, headMaterial);
+                domeMesh.position.y = 3.75;
+                headGroup.add(domeMesh);
+
+                if (state.headText.trim() !== '') {
+                    const { size: tSize, x: tX, y: tY } = state.textConfig;
+                    const arcAngle = Math.min(Math.PI * 1.2, Math.PI * 0.45 * tSize);
+                    const textCylHeight = 3.2 * tSize;
+                    const arcWidth = radius * arcAngle;
+                    const aspectRatio = arcWidth / textCylHeight;
+
+                    const textTex = createHeadTextTexture(state.headText, true, aspectRatio);
+                    const thetaStart = -arcAngle / 2 + (tX * 1.1);
+                    const textGeo = new THREE.CylinderGeometry(radius + 0.035, radius + 0.035, textCylHeight, 32, 1, true, thetaStart, arcAngle);
+                    const textMat = new THREE.MeshBasicMaterial({
+                        map: textTex,
+                        transparent: false,
+                        alphaTest: 0.15,
+                        depthTest: true,
+                        depthWrite: true,
+                        side: THREE.DoubleSide
+                    });
+                    const textMesh = new THREE.Mesh(textGeo, textMat);
+                    textMesh.position.y = 1.95 + tY;
+                    textMesh.frustumCulled = false;
+                    textMesh.renderOrder = 10;
+                    headGroup.add(textMesh);
+                }
+
+            } else if (state.shape === 'sphere') {
+                const sphereRadius = 1.42;
+                const sphereCenterY = 0.15 + sphereRadius - 0.08;
+
+                const sphereGeo = new THREE.SphereGeometry(sphereRadius, 48, 36);
+                const sphereMesh = new THREE.Mesh(sphereGeo, headMaterial);
+                sphereMesh.position.y = sphereCenterY;
+                headGroup.add(sphereMesh);
+
+                const auraGeo1 = new THREE.SphereGeometry(sphereRadius * 1.08, 36, 28);
+                const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
+                auraMesh1.position.y = sphereCenterY;
+                auraMesh1.userData.isAura = true;
+                headGroup.add(auraMesh1);
+
+                const neckGeo = new THREE.CylinderGeometry(0.42, 0.36, 0.25, 32);
+                const neckMesh = new THREE.Mesh(neckGeo, headMaterial);
+                neckMesh.position.y = 0.22;
+                headGroup.add(neckMesh);
+
+                if (state.headText.trim() !== '') {
+                    const { size: tSize, x: tX, y: tY } = state.textConfig;
+                    const plateW = 2.05 * tSize;
+                    const plateH = 1.2 * tSize;
+                    const textTex = createHeadTextTexture(state.headText, false, plateW / plateH);
+                    const phiLength = Math.min(Math.PI * 0.95, Math.PI * 0.56 * tSize);
+                    const thetaLength = Math.min(Math.PI * 0.85, Math.PI * 0.36 * tSize);
+                    const phiStart = Math.PI / 2 - phiLength / 2 + (tX / sphereRadius);
+                    const thetaStart = Math.max(0.1, Math.min(Math.PI - thetaLength - 0.1, Math.PI / 2 - thetaLength / 2 - (tY / sphereRadius)));
+                    const textSphereGeo = new THREE.SphereGeometry(
+                        sphereRadius + 0.04, 32, 24,
+                        phiStart, phiLength,
+                        thetaStart, thetaLength
+                    );
+                    const textMat = new THREE.MeshBasicMaterial({
+                        map: textTex,
+                        transparent: false,
+                        alphaTest: 0.15,
+                        depthTest: true,
+                        depthWrite: true,
+                        side: THREE.DoubleSide
+                    });
+                    const textMesh = new THREE.Mesh(textSphereGeo, textMat);
+                    textMesh.position.y = sphereCenterY;
+                    textMesh.frustumCulled = false;
+                    textMesh.renderOrder = 10;
+                    headGroup.add(textMesh);
+                }
+
+            } else if (state.shape === 'acrylic') {
+                buildAcrylicHead(baseColor);
+
+            } else if (state.shape === 'bear' || state.shape === 'cat' || state.shape === 'dog') {
+                buildAnimalHead(state.shape, baseConnectWidth);
+
+            } else {
+                const shape = createSingleContourShape(state.shape, baseConnectWidth);
+                const extrudeSettings = {
+                    steps: 1,
+                    depth: 0.16,
+                    bevelEnabled: true,
+                    bevelThickness: 0.03,
+                    bevelSize: 0.03,
+                    bevelSegments: 3
+                };
+                const headGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                headGeo.translate(0, 0, -0.08);
+
+                const headMesh = new THREE.Mesh(headGeo, headMaterial);
+                headMesh.position.y = 0.15;
+                headGroup.add(headMesh);
+
+                const auraMesh = new THREE.Mesh(headGeo, auraMaterial);
+                auraMesh.position.set(0, 0.15, 0);
+                auraMesh.scale.set(1.06, 1.06, 1.3);
+                auraMesh.userData.isAura = true;
+                headGroup.add(auraMesh);
+
+                if (state.headText.trim() !== '') {
+                    addFlatTextMesh(1.6, 0.155);
+                }
+            }
+
+            applyAllDecalStickers();
+        }
+
+        function buildAnimalHead(type, baseConnectWidth) {
+            const extrudeSettings = {
+                steps: 1,
+                depth: 0.16,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.03,
+                bevelSegments: 3
+            };
+
+            const headCenterY = 1.45;
+            const headRadius = 1.32;
+            const halfW = baseConnectWidth / 2;
+
+            if (type === 'dog') {
+                // 添付画像通りの犬のシルエット（頭頂部から左右に広がる垂れ耳＋丸い輪郭の一体形状）
+                const dogShape = new THREE.Shape();
+                dogShape.moveTo(-halfW, 0);
+                dogShape.lineTo(halfW, 0);
+                // 右側の丸い頬から耳の下側へ
+                dogShape.bezierCurveTo(0.85, 0.25, 1.15, 0.72, 1.12, 1.12);
+                // 右垂れ耳の先端と上側
+                dogShape.bezierCurveTo(1.42, 0.92, 1.88, 0.92, 1.98, 1.15);
+                dogShape.bezierCurveTo(2.08, 1.38, 1.72, 1.65, 1.15, 1.98);
+                // 頭頂部の丸み
+                dogShape.bezierCurveTo(0.65, 2.28, 0.35, 2.42, 0.0, 2.42);
+                dogShape.bezierCurveTo(-0.35, 2.42, -0.65, 2.28, -1.15, 1.98);
+                // 左垂れ耳の上側と先端
+                dogShape.bezierCurveTo(-1.72, 1.65, -2.08, 1.38, -1.98, 1.15);
+                dogShape.bezierCurveTo(-1.88, 0.92, -1.42, 0.92, -1.12, 1.12);
+                // 左側の丸い頬から根元へ
+                dogShape.bezierCurveTo(-1.15, 0.72, -0.85, 0.25, -halfW, 0);
+                dogShape.closePath();
+
+                const dogGeo = new THREE.ExtrudeGeometry(dogShape, extrudeSettings);
+                dogGeo.translate(0, 0, -0.08);
+                const dogMesh = new THREE.Mesh(dogGeo, headMaterial);
+                dogMesh.position.y = 0.15;
+                dogMesh.renderOrder = 1;
+                headGroup.add(dogMesh);
+
+                const dogAura = new THREE.Mesh(dogGeo, auraMaterial);
+                dogAura.position.set(0, 0.15 - 0.04, 0);
+                dogAura.scale.set(1.05, 1.05, 1.3);
+                dogAura.userData.isAura = true;
+                dogAura.renderOrder = 2;
+                headGroup.add(dogAura);
+
+                if (state.headText.trim() !== '') {
+                    addFlatTextMesh(0.15 + 1.25, 0.155);
+                }
+                return;
+            }
+
+            if (type === 'bear') {
+                // 顔の正円と左右の耳円の正確な幾何学的交点を算出して1つの滑らかなパスに結合
+                const rFace = 1.42;
+                const cyFace = 1.42;
+                const rEar = 0.54;
+                const cxEar = 1.12;
+                const cyEar = 2.58;
+
+                // 右耳円と顔円の2つの交点を求める
+                const dx = cxEar;
+                const dy = cyEar - cyFace;
+                const d = Math.hypot(dx, dy);
+                const a = (rFace * rFace - rEar * rEar + d * d) / (2 * d);
+                const h = Math.sqrt(Math.max(0, rFace * rFace - a * a));
+                const xm = (a / d) * dx;
+                const ym = cyFace + (a / d) * dy;
+                const rx = -(dy / d) * h;
+                const ry = (dx / d) * h;
+
+                // 右側の交点（下側：耳の外側付け根、上側：耳の内側付け根）
+                const pLow = { x: xm - rx, y: ym - ry };
+                const pHigh = { x: xm + rx, y: ym + ry };
+
+                const faceRightAngle = Math.atan2(pLow.y - cyFace, pLow.x);
+                const faceTopRightAngle = Math.atan2(pHigh.y - cyFace, pHigh.x);
+                const faceTopLeftAngle = Math.PI - faceTopRightAngle;
+                const faceLeftAngle = Math.PI - faceRightAngle;
+
+                const rightEarStartAngle = Math.atan2(pLow.y - cyEar, pLow.x - cxEar);
+                const rightEarEndAngle = Math.atan2(pHigh.y - cyEar, pHigh.x - cxEar);
+
+                const leftEarStartAngle = Math.atan2(pHigh.y - cyEar, -pHigh.x + cxEar);
+                const leftEarEndAngle = Math.atan2(pLow.y - cyEar, -pLow.x + cxEar);
+
+                // スティック根元との交差角度
+                const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
+                const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
+
+                const bearShape = new THREE.Shape();
+                bearShape.moveTo(-halfW, 0);
+                bearShape.lineTo(halfW, 0);
+                // 顔の正円の右半分
+                bearShape.absarc(0, cyFace, rFace, baseAngleRight, faceRightAngle, false);
+                // 右耳の外周円弧
+                bearShape.absarc(cxEar, cyEar, rEar, rightEarStartAngle, rightEarEndAngle, false);
+                // 頭頂部の正円弧
+                bearShape.absarc(0, cyFace, rFace, faceTopRightAngle, faceTopLeftAngle, false);
+                // 左耳の外周円弧
+                bearShape.absarc(-cxEar, cyEar, rEar, leftEarStartAngle, leftEarEndAngle, false);
+                // 顔の正円の左半分
+                bearShape.absarc(0, cyFace, rFace, faceLeftAngle, baseAngleLeft, false);
+                bearShape.closePath();
+
+                const bearGeo = new THREE.ExtrudeGeometry(bearShape, extrudeSettings);
+                bearGeo.translate(0, 0, -0.08);
+                const bearMesh = new THREE.Mesh(bearGeo, headMaterial);
+                bearMesh.position.y = 0.15;
+                bearMesh.renderOrder = 1;
+                headGroup.add(bearMesh);
+
+                const bearAura = new THREE.Mesh(bearGeo, auraMaterial);
+                bearAura.position.set(0, 0.15 - 0.04, 0);
+                bearAura.scale.set(1.06, 1.06, 1.3);
+                bearAura.userData.isAura = true;
+                bearAura.renderOrder = 2;
+                headGroup.add(bearAura);
+
+                if (state.headText.trim() !== '') {
+                    addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
+                }
+                return;
+            }
+
+            if (type === 'cat') {
+                // 顔の正円とシャープな三角猫耳を1つの滑らかなパスに結合
+                const rFace = 1.42;
+                const cyFace = 1.42;
+                const aLow = 0.44;  // 耳の外側付け根角度
+                const aHigh = 1.08; // 耳の内側付け根角度
+
+                const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
+                const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
+
+                const catShape = new THREE.Shape();
+                catShape.moveTo(-halfW, 0);
+                catShape.lineTo(halfW, 0);
+                // 顔の正円の右側面
+                catShape.absarc(0, cyFace, rFace, baseAngleRight, aLow, false);
+                // 右三角耳
+                catShape.quadraticCurveTo(1.36, 2.55, 1.30, 3.04);
+                catShape.quadraticCurveTo(1.24, 3.12, 1.12, 3.08);
+                catShape.quadraticCurveTo(0.84, 2.90, Math.cos(aHigh) * rFace, cyFace + Math.sin(aHigh) * rFace);
+                // 頭頂部の正円弧
+                catShape.absarc(0, cyFace, rFace, aHigh, Math.PI - aHigh, false);
+                // 左三角耳
+                catShape.quadraticCurveTo(-0.84, 2.90, -1.12, 3.08);
+                catShape.quadraticCurveTo(-1.24, 3.12, -1.30, 3.04);
+                catShape.quadraticCurveTo(-1.36, 2.55, Math.cos(Math.PI - aLow) * rFace, cyFace + Math.sin(Math.PI - aLow) * rFace);
+                // 顔の正円の左側面
+                catShape.absarc(0, cyFace, rFace, Math.PI - aLow, baseAngleLeft, false);
+                catShape.closePath();
+
+                const catGeo = new THREE.ExtrudeGeometry(catShape, extrudeSettings);
+                catGeo.translate(0, 0, -0.08);
+                const catMesh = new THREE.Mesh(catGeo, headMaterial);
+                catMesh.position.y = 0.15;
+                catMesh.renderOrder = 1;
+                headGroup.add(catMesh);
+
+                const catAura = new THREE.Mesh(catGeo, auraMaterial);
+                catAura.position.set(0, 0.15 - 0.04, 0);
+                catAura.scale.set(1.06, 1.06, 1.3);
+                catAura.userData.isAura = true;
+                catAura.renderOrder = 2;
+                headGroup.add(catAura);
+
+                if (state.headText.trim() !== '') {
+                    addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
+                }
+                return;
+            }
+        }
+
+        function buildAcrylicHead(baseColor) {
+            const standMat = new THREE.MeshStandardMaterial({
+                color: baseColor,
+                emissive: baseColor,
+                emissiveIntensity: 0.85,
+                roughness: 0.2
+            });
+            const neckGeo = new THREE.CylinderGeometry(0.42, 0.36, 0.22, 32);
+            const neckMesh = new THREE.Mesh(neckGeo, standMat);
+            neckMesh.position.y = 0.22;
+            headGroup.add(neckMesh);
+
+            const acrylicControls = document.getElementById('acrylic-controls');
+
+            if (!state.acrylicData) {
+                acrylicControls.classList.add('hidden');
+                const guideGeo = new THREE.PlaneGeometry(2.2, 2.8);
+                const guideMat = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.15,
+                    roughness: 0.1,
+                    side: THREE.DoubleSide
+                });
+                const guideMesh = new THREE.Mesh(guideGeo, guideMat);
+                guideMesh.position.set(0, 1.75, 0);
+                headGroup.add(guideMesh);
+
+                const edges = new THREE.EdgesGeometry(guideGeo);
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: baseColor }));
+                line.position.set(0, 1.75, 0);
+                headGroup.add(line);
+                return;
+            }
+
+            acrylicControls.classList.remove('hidden');
+
+            const { dataUrl, aspect, contourPoints } = state.acrylicData;
+            const { size, x, y } = state.acrylicConfig;
+
+            const baseMaxH = 3.1;
+            const baseMaxW = 2.7;
+            let dispW = baseMaxH * aspect * size;
+            let dispH = baseMaxH * size;
+            if (dispW > baseMaxW * size) {
+                dispW = baseMaxW * size;
+                dispH = (baseMaxW * size) / aspect;
+            }
+
+            if (contourPoints && contourPoints.length >= 3) {
+                const shape = new THREE.Shape();
+                contourPoints.forEach((pt, idx) => {
+                    const px = (pt.x - 0.5) * dispW;
+                    const py = (0.5 - pt.y) * dispH;
+                    if (idx === 0) shape.moveTo(px, py);
+                    else shape.lineTo(px, py);
+                });
+                shape.closePath();
+
+                const extrudeSettings = {
+                    steps: 1,
+                    depth: 0.1,
+                    bevelEnabled: true,
+                    bevelThickness: 0.015,
+                    bevelSize: 0.02,
+                    bevelSegments: 2
+                };
+                const acrylicGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                acrylicGeo.translate(0, 0, -0.05);
+                const clearAcrylicMat = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.22,
+                    roughness: 0.1,
+                    metalness: 0.0,
+                    depthWrite: false,
+                    side: THREE.DoubleSide
+                });
+                const acrylicMesh = new THREE.Mesh(acrylicGeo, clearAcrylicMat);
+                acrylicMesh.position.set(x, y, 0);
+                acrylicMesh.renderOrder = 1;
+                headGroup.add(acrylicMesh);
+
+                const edgePoints = contourPoints.map(pt => new THREE.Vector3((pt.x - 0.5) * dispW, (0.5 - pt.y) * dispH, 0));
+                const edgeGeo = new THREE.BufferGeometry().setFromPoints(edgePoints);
+                const edgeMat = new THREE.LineBasicMaterial({ color: baseColor, linewidth: 2 });
+                const edgeLoop = new THREE.LineLoop(edgeGeo, edgeMat);
+                edgeLoop.position.set(x, y, 0);
+                edgeLoop.userData.skipExport = true;
+                edgeLoop.renderOrder = 3;
+                headGroup.add(edgeLoop);
+            }
+
+            if (state.acrylicData.imgElement) {
+                const texture = new THREE.Texture(state.acrylicData.imgElement);
+                texture.encoding = THREE.sRGBEncoding;
+                texture.needsUpdate = true;
+
+                const imgMat = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    alphaTest: 0.05,
+                    depthWrite: false,
+                    side: THREE.DoubleSide
+                });
+                const imgGeo = new THREE.PlaneGeometry(dispW, dispH);
+                const imgMesh = new THREE.Mesh(imgGeo, imgMat);
+                imgMesh.position.set(x, y, 0.075);
+                imgMesh.frustumCulled = false;
+                imgMesh.renderOrder = 5;
+                headGroup.add(imgMesh);
+            }
+        }
+
+        function addFlatTextMesh(posY, posZ) {
+            const { size: tSize, x: tX, y: tY } = state.textConfig;
+            const plateW = 1.95 * tSize;
+            const plateH = 1.15 * tSize;
+            const textTex = createHeadTextTexture(state.headText, false, plateW / plateH);
+            const textPlaneGeo = new THREE.PlaneGeometry(plateW, plateH);
+            const textMat = new THREE.MeshBasicMaterial({
+                map: textTex,
+                transparent: false,
+                alphaTest: 0.15,
+                depthTest: true,
+                depthWrite: true,
+                side: THREE.DoubleSide
+            });
+            const textMesh = new THREE.Mesh(textPlaneGeo, textMat);
+            textMesh.position.set(tX, posY + tY, posZ + 0.05);
+            textMesh.frustumCulled = false;
+            textMesh.renderOrder = 10;
+            headGroup.add(textMesh);
+        }
+
+        function applyAllDecalStickers() {
+            state.decals.forEach((decal, idx) => {
+                if (!decal.dataUrl || !decal.imgElement) return;
+
+                const { imgElement, aspect, size, x, y } = decal;
+                const w = aspect >= 1 ? size : size * aspect;
+                const h = aspect >= 1 ? size / aspect : size;
+                const layerOffset = idx * 0.025;
+
+                const texture = new THREE.Texture(imgElement);
+                texture.encoding = THREE.sRGBEncoding;
+                texture.needsUpdate = true;
+
+                const decalMat = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: false,
+                    alphaTest: 0.15,
+                    depthTest: true,
+                    depthWrite: true,
+                    side: THREE.DoubleSide
+                });
+
+                let decalMesh;
+                if (state.shape === 'stick') {
+                    const cylRadius = 0.39 + layerOffset;
+                    const thetaLength = Math.min(Math.PI * 1.4, w / cylRadius);
+                    const thetaStart = -thetaLength / 2 + (x * 0.8);
+                    const geo = new THREE.CylinderGeometry(
+                        cylRadius, cylRadius, h,
+                        24, 1, true,
+                        thetaStart, thetaLength
+                    );
+                    decalMesh = new THREE.Mesh(geo, decalMat);
+                    decalMesh.position.set(0, y, 0);
+                } else if (state.shape === 'sphere') {
+                    const sphereRadius = 1.47 + layerOffset;
+                    const sphereCenterY = 0.15 + 1.42 - 0.08;
+                    const phiLength = Math.min(Math.PI * 0.9, w / sphereRadius);
+                    const thetaLength = Math.min(Math.PI * 0.8, h / sphereRadius);
+
+                    const offsetPhi = (x / sphereRadius);
+                    const offsetTheta = -((y - sphereCenterY) / sphereRadius);
+
+                    const phiStart = Math.PI / 2 - phiLength / 2 + offsetPhi;
+                    const thetaStart = Math.max(0.1, Math.min(Math.PI - thetaLength - 0.1, Math.PI / 2 - thetaLength / 2 + offsetTheta));
+
+                    const geo = new THREE.SphereGeometry(
+                        sphereRadius, 24, 18,
+                        phiStart, phiLength,
+                        thetaStart, thetaLength
+                    );
+                    decalMesh = new THREE.Mesh(geo, decalMat);
+                    decalMesh.position.set(0, sphereCenterY, 0);
+                } else {
+                    const geo = new THREE.PlaneGeometry(w, h);
+                    decalMesh = new THREE.Mesh(geo, decalMat);
+                    const baseZ = state.shape === 'acrylic' ? 0.14 : 0.19;
+                    decalMesh.position.set(x, y, baseZ + layerOffset);
+                }
+
+                decalMesh.frustumCulled = false;
+                decalMesh.renderOrder = 25 + idx;
+                headGroup.add(decalMesh);
+            });
+        }
+
+        function createSingleContourShape(type, baseConnectWidth) {
+            const shape = new THREE.Shape();
+            const halfW = baseConnectWidth / 2;
+
+            if (type === 'heart') {
+                shape.moveTo(-halfW, 0);
+                shape.lineTo(halfW, 0);
+                shape.bezierCurveTo(1.65, 0.85, 1.85, 2.35, 0.85, 2.5);
+                shape.bezierCurveTo(0.32, 2.55, 0, 2.1, 0, 1.88);
+                shape.bezierCurveTo(0, 2.1, -0.32, 2.55, -0.85, 2.5);
+                shape.bezierCurveTo(-1.85, 2.35, -1.65, 0.85, -halfW, 0);
+            } else if (type === 'star') {
+                // スティックの接続部（ネック）を含めた星型の一体輪郭
+                const spikes = 5;
+                const outerRadius = 1.65;
+                const innerRadius = 0.78;
+                const offsetY = 1.82;
+                const pts = [];
+                for (let i = 0; i < spikes * 2; i++) {
+                    const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                    const angle = (i * Math.PI) / spikes + Math.PI / 2;
+                    pts.push({
+                        x: Math.cos(angle) * radius,
+                        y: Math.sin(angle) * radius + offsetY
+                    });
+                }
+                // 根元の接続部から右下の谷へ繋げる
+                shape.moveTo(-halfW, 0);
+                shape.lineTo(halfW, 0);
+                shape.lineTo(halfW * 0.9, 0.75);
+                // 右下・右上・頂点・左上・左下の順に星の外周をたどる
+                for (let i = 6; i < 10; i++) {
+                    shape.lineTo(pts[i].x, pts[i].y);
+                }
+                for (let i = 0; i <= 4; i++) {
+                    shape.lineTo(pts[i].x, pts[i].y);
+                }
+                shape.lineTo(-halfW * 0.9, 0.75);
+                shape.closePath();
+            } else if (type === 'circle') {
+                shape.absarc(0, 1.45, 1.45, 0, Math.PI * 2, false);
+            } else {
+                shape.moveTo(-halfW, 0);
+                shape.lineTo(halfW, 0);
+                shape.lineTo(halfW, 2.9);
+                shape.lineTo(-halfW, 2.9);
+                shape.closePath();
+            }
+            return shape;
+        }
+
+        function createHeadTextTexture(text, isVertical, aspectRatio = 1) {
+            const canvas = document.createElement('canvas');
+            if (isVertical) {
+                canvas.height = 1024;
+                canvas.width = Math.max(128, Math.round(canvas.height * aspectRatio));
+            } else {
+                canvas.width = 1024;
+                canvas.height = Math.round(canvas.width / aspectRatio);
+            }
+
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.95)';
+            ctx.shadowBlur = 12;
+
+            if (isVertical) {
+                const chars = Array.from(text);
+                const maxAvailableHeight = canvas.height * 0.88;
+                const maxAvailableWidth = canvas.width * 0.72;
+                const lineHeightRatio = 1.12;
+
+                let fontSize = Math.min(maxAvailableWidth, 110);
+                if (chars.length > 0 && chars.length * fontSize * lineHeightRatio > maxAvailableHeight) {
+                    fontSize = Math.floor(maxAvailableHeight / (chars.length * lineHeightRatio));
+                }
+                fontSize = Math.max(20, fontSize);
+
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+                const totalHeight = chars.length * fontSize * lineHeightRatio;
+                let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
+
+                chars.forEach((char) => {
+                    ctx.save();
+                    ctx.translate(canvas.width / 2, startY);
+                    if (char === 'ー' || char === '-' || char === '〜' || char === '~' || char === '＝' || char === '=') {
+                        ctx.rotate(Math.PI / 2);
+                        ctx.fillText(char, 0, 0);
+                    } else if (char === '、' || char === '。' || char === '，' || char === '．') {
+                        ctx.fillText(char, fontSize * 0.36, -fontSize * 0.36);
+                    } else {
+                        ctx.fillText(char, 0, 0);
+                    }
+                    ctx.restore();
+                    startY += fontSize * lineHeightRatio;
+                });
+            } else {
+                const chars = Array.from(text);
+                let lines = [text];
+                if (chars.length >= 8) {
+                    const mid = Math.ceil(chars.length / 2);
+                    lines = [chars.slice(0, mid).join(''), chars.slice(mid).join('')];
+                }
+
+                const maxTextWidth = canvas.width * 0.85;
+                const maxTextHeight = canvas.height * 0.75;
+                let fontSize = lines.length > 1 ? 96 : 130;
+
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+                let longestLineWidth = Math.max(...lines.map(l => ctx.measureText(l).width));
+                if (longestLineWidth > maxTextWidth) {
+                    fontSize = Math.floor(fontSize * (maxTextWidth / longestLineWidth));
+                }
+                const totalH = lines.length * fontSize * 1.25;
+                if (totalH > maxTextHeight) {
+                    fontSize = Math.floor(fontSize * (maxTextHeight / totalH));
+                }
+                fontSize = Math.max(28, fontSize);
+
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+                const finalLineHeight = fontSize * 1.22;
+                let startY = (canvas.height - finalLineHeight * (lines.length - 1)) / 2;
+
+                lines.forEach((line) => {
+                    ctx.fillText(line, canvas.width / 2, startY);
+                    startY += finalLineHeight;
+                });
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        function createHandleTextTexture(text, aspectRatio = 0.3) {
+            const canvas = document.createElement('canvas');
+            canvas.height = 512;
+            canvas.width = Math.max(128, Math.round(canvas.height * aspectRatio));
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(Math.PI / 2);
+
+            let fontSize = Math.min(canvas.width * 0.65, 42);
+            ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+            const maxW = canvas.height * 0.85;
+            const measuredW = ctx.measureText(text).width;
+            if (measuredW > maxW) {
+                fontSize = Math.floor(fontSize * (maxW / measuredW));
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+            }
+
+            ctx.fillStyle = '#3F3F46';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        function loadAndProcessImage(file, removeWhiteBg, extractContour, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const aspect = img.width / img.height;
+                    const maxDim = 512;
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > maxDim || h > maxDim) {
+                        if (w > h) {
+                            h = Math.round(h * (maxDim / w));
+                            w = maxDim;
+                        } else {
+                            w = Math.round(w * (maxDim / h));
+                            h = maxDim;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    const imgData = ctx.getImageData(0, 0, w, h);
+                    const data = imgData.data;
+
+                    if (removeWhiteBg) {
+                        const visited = new Uint8Array(w * h);
+                        const stack = [];
+                        const isWhite = (idx) => data[idx * 4] > 240 && data[idx * 4 + 1] > 240 && data[idx * 4 + 2] > 240;
+
+                        for (let x = 0; x < w; x++) {
+                            if (isWhite(x)) stack.push(x);
+                            if (isWhite((h - 1) * w + x)) stack.push((h - 1) * w + x);
+                        }
+                        for (let y = 0; y < h; y++) {
+                            if (isWhite(y * w)) stack.push(y * w);
+                            if (isWhite(y * w + (w - 1))) stack.push(y * w + (w - 1));
+                        }
+
+                        while (stack.length > 0) {
+                            const curr = stack.pop();
+                            if (visited[curr]) continue;
+                            visited[curr] = 1;
+                            data[curr * 4 + 3] = 0;
+
+                            const cx = curr % w;
+                            const cy = Math.floor(curr / w);
+                            if (cx > 0 && !visited[curr - 1] && isWhite(curr - 1)) stack.push(curr - 1);
+                            if (cx < w - 1 && !visited[curr + 1] && isWhite(curr + 1)) stack.push(curr + 1);
+                            if (cy > 0 && !visited[curr - w] && isWhite(curr - w)) stack.push(curr - w);
+                            if (cy < h - 1 && !visited[curr + w] && isWhite(curr + w)) stack.push(curr + w);
+                        }
+                        ctx.putImageData(imgData, 0, 0);
+                    }
+
+                    let contourPoints = [];
+                    if (extractContour) {
+                        // 高精度アクスタ輪郭抽出（グリッド化 → 膨張処理 → 輪郭追跡 → スムージング）
+                        const gw = 160;
+                        const gh = Math.max(40, Math.round(gw / aspect));
+                        const mask = new Uint8Array(gw * gh);
+
+                        // アルファ値をサンプリング
+                        for (let gy = 0; gy < gh; gy++) {
+                            for (let gx = 0; gx < gw; gx++) {
+                                const sx = Math.min(w - 1, Math.floor((gx / gw) * w));
+                                const sy = Math.min(h - 1, Math.floor((gy / gh) * h));
+                                if (data[(sy * w + sx) * 4 + 3] > 30) {
+                                    mask[gy * gw + gx] = 1;
+                                }
+                            }
+                        }
+
+                        // アクリル余白用の膨張処理（ダイレーション）
+                        const dilateR = 5;
+                        const dilated = new Uint8Array(gw * gh);
+                        for (let gy = 0; gy < gh; gy++) {
+                            for (let gx = 0; gx < gw; gx++) {
+                                if (mask[gy * gw + gx]) {
+                                    const y0 = Math.max(1, gy - dilateR);
+                                    const y1 = Math.min(gh - 2, gy + dilateR);
+                                    const x0 = Math.max(1, gx - dilateR);
+                                    const x1 = Math.min(gw - 2, gx + dilateR);
+                                    for (let ny = y0; ny <= y1; ny++) {
+                                        for (let nx = x0; nx <= x1; nx++) {
+                                            if ((nx - gx) * (nx - gx) + (ny - gy) * (ny - gy) <= dilateR * dilateR) {
+                                                dilated[ny * gw + nx] = 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // ムーア近傍法（Moore-Neighbor Tracing）で外周輪郭を追跡
+                        let startX = -1, startY = -1;
+                        outer: for (let gy = 1; gy < gh - 1; gy++) {
+                            for (let gx = 1; gx < gw - 1; gx++) {
+                                if (dilated[gy * gw + gx] === 1) {
+                                    startX = gx;
+                                    startY = gy;
+                                    break outer;
+                                }
+                            }
+                        }
+
+                        if (startX !== -1) {
+                            const dirs = [
+                                [0, -1], [1, -1], [1, 0], [1, 1],
+                                [0, 1], [-1, 1], [-1, 0], [-1, -1]
+                            ];
+                            let cx = startX, cy = startY;
+                            let prevDir = 6; // 左から進入した前提
+                            const rawPts = [];
+                            const maxSteps = gw * gh * 2;
+
+                            for (let step = 0; step < maxSteps; step++) {
+                                rawPts.push({ x: cx / gw, y: cy / gh });
+                                let found = false;
+                                const searchStart = (prevDir + 5) % 8;
+                                for (let i = 0; i < 8; i++) {
+                                    const d = (searchStart + i) % 8;
+                                    const nx = cx + dirs[d][0];
+                                    const ny = cy + dirs[d][1];
+                                    if (nx >= 0 && nx < gw && ny >= 0 && ny < gh && dilated[ny * gw + nx] === 1) {
+                                        cx = nx;
+                                        cy = ny;
+                                        prevDir = d;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found || (cx === startX && cy === startY && step > 4)) {
+                                    break;
+                                }
+                            }
+
+                            // 頂点の間引きと移動平均による滑らかなアクスタカットライン生成
+                            const stepSize = Math.max(1, Math.floor(rawPts.length / 110));
+                            const sampled = [];
+                            for (let i = 0; i < rawPts.length; i += stepSize) {
+                                sampled.push(rawPts[i]);
+                            }
+
+                            const len = sampled.length;
+                            for (let i = 0; i < len; i++) {
+                                const pPrev = sampled[(i - 1 + len) % len];
+                                const pCurr = sampled[i];
+                                const pNext = sampled[(i + 1) % len];
+                                contourPoints.push({
+                                    x: (pPrev.x + pCurr.x * 2 + pNext.x) / 4,
+                                    y: (pPrev.y + pCurr.y * 2 + pNext.y) / 4
+                                });
+                            }
+                        }
+                    }
+
+                    const processedDataUrl = canvas.toDataURL('image/png');
+                    const processedImg = new Image();
+                    processedImg.onload = function() {
+                        callback({
+                            dataUrl: processedDataUrl,
+                            imgElement: processedImg,
+                            aspect: aspect,
+                            contourPoints: contourPoints
+                        });
+                    };
+                    processedImg.src = processedDataUrl;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderDecalsUI() {
+            const container = document.getElementById('decals-container');
+            container.innerHTML = '';
+
+            let visibleCount = 1;
+            if (state.decals[0].dataUrl) visibleCount = 2;
+            if (state.decals[1].dataUrl) visibleCount = 3;
+
+            for (let index = 0; index < visibleCount; index++) {
+                const decal = state.decals[index];
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-2xl';
+                slotDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-700">デコ画像 ${index + 1}</span>
+                        ${decal.dataUrl ? `<button type="button" data-index="${index}" class="remove-decal-btn text-[11px] text-zinc-400 hover:text-zinc-900 underline">削除</button>` : ''}
+                    </div>
+                    <input type="file" data-index="${index}" accept="image/*" class="decal-file-input w-full text-xs text-zinc-500 file:mr-3 file:py-1.5 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-zinc-900 file:text-white hover:file:bg-zinc-800 file:cursor-pointer">
+                    <label class="flex items-center gap-2 text-[11px] text-zinc-500 cursor-pointer">
+                        <input type="checkbox" data-index="${index}" class="decal-white-chk rounded accent-zinc-900" ${decal.removeWhite ? 'checked' : ''}>
+                        <span>白背景を自動で透明にする</span>
+                    </label>
+                    ${decal.dataUrl ? `
+                        <div class="flex flex-col gap-2 pt-2 border-t border-zinc-200">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex justify-between text-[11px] text-zinc-500">
+                                    <span>サイズ</span>
+                                    <span>${decal.size.toFixed(2)}</span>
+                                </div>
+                                <input type="range" data-index="${index}" data-param="size" min="0.2" max="2.5" step="0.05" value="${decal.size}" class="decal-slider accent-zinc-900 cursor-pointer">
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <div class="flex justify-between text-[11px] text-zinc-500">
+                                    <span>左右位置</span>
+                                    <span>${decal.x.toFixed(2)}</span>
+                                </div>
+                                <input type="range" data-index="${index}" data-param="x" min="-1.5" max="1.5" step="0.05" value="${decal.x}" class="decal-slider accent-zinc-900 cursor-pointer">
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <div class="flex justify-between text-[11px] text-zinc-500">
+                                    <span>上下位置</span>
+                                    <span>${decal.y.toFixed(2)}</span>
+                                </div>
+                                <input type="range" data-index="${index}" data-param="y" min="0.2" max="3.6" step="0.05" value="${decal.y}" class="decal-slider accent-zinc-900 cursor-pointer">
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(slotDiv);
+            }
+
+            container.querySelectorAll('.decal-file-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    const file = e.target.files[0];
+                    if (file) {
+                        state.decals[idx].rawFile = file;
+                        loadAndProcessImage(file, state.decals[idx].removeWhite, false, (res) => {
+                            state.decals[idx].dataUrl = res.dataUrl;
+                            state.decals[idx].imgElement = res.imgElement;
+                            state.decals[idx].aspect = res.aspect;
+                            renderDecalsUI();
+                            buildHead();
+                            showToast(`デコ画像 ${idx + 1} を設定しました！`);
+                        });
+                    }
+                });
+            });
+
+            container.querySelectorAll('.decal-white-chk').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    state.decals[idx].removeWhite = e.target.checked;
+                    if (state.decals[idx].rawFile) {
+                        loadAndProcessImage(state.decals[idx].rawFile, state.decals[idx].removeWhite, false, (res) => {
+                            state.decals[idx].dataUrl = res.dataUrl;
+                            state.decals[idx].imgElement = res.imgElement;
+                            buildHead();
+                        });
+                    }
+                });
+            });
+
+            container.querySelectorAll('.remove-decal-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    state.decals.splice(idx, 1);
+                    state.decals.push({ rawFile: null, dataUrl: null, imgElement: null, aspect: 1, size: 1.0, x: 0.0, y: 1.6, removeWhite: false });
+                    renderDecalsUI();
+                    buildHead();
+                    showToast(`デコ画像 ${idx + 1} を削除しました`);
+                });
+            });
+
+            container.querySelectorAll('.decal-slider').forEach(slider => {
+                slider.addEventListener('input', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    const param = e.target.dataset.param;
+                    state.decals[idx][param] = parseFloat(e.target.value);
+                    const valLabel = e.target.previousElementSibling.querySelector('span:last-child');
+                    if (valLabel) valLabel.textContent = state.decals[idx][param].toFixed(2);
+                    buildHead();
+                });
+            });
+        }
+
+        function setupUI() {
+            const shapeBtns = document.querySelectorAll('.shape-btn');
+            const acrylicUploadBox = document.getElementById('acrylic-upload-box');
+            const textInputSection = document.getElementById('text-input-section');
+
+            shapeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    shapeBtns.forEach(b => {
+                        if (b.dataset.shape === 'acrylic') {
+                            b.className = 'shape-btn col-span-4 py-2.5 px-3 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 flex items-center justify-center gap-1.5 whitespace-nowrap';
+                        } else {
+                            b.className = 'shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 whitespace-nowrap';
+                        }
+                    });
+                    if (btn.dataset.shape === 'acrylic') {
+                        btn.className = 'shape-btn col-span-4 py-2.5 px-3 rounded-2xl border text-xs font-bold transition-all bg-zinc-900 text-white border-zinc-900 flex items-center justify-center gap-1.5 whitespace-nowrap';
+                    } else {
+                        btn.className = 'shape-btn py-2.5 px-2 rounded-2xl border text-xs font-bold transition-all bg-zinc-900 text-white border-zinc-900 whitespace-nowrap';
+                    }
+
+                    state.shape = btn.dataset.shape;
+
+                    if (state.shape === 'acrylic') {
+                        acrylicUploadBox.classList.remove('hidden');
+                        textInputSection.classList.add('hidden');
+                    } else {
+                        acrylicUploadBox.classList.add('hidden');
+                        textInputSection.classList.remove('hidden');
+                    }
+
+                    buildHead();
+                });
+            });
+
+            function refreshAcrylicImage() {
+                if (!state.acrylicRawFile) return;
+                const removeWhite = document.getElementById('acrylic-remove-white').checked;
+                loadAndProcessImage(state.acrylicRawFile, removeWhite, true, (result) => {
+                    state.acrylicData = result;
+                    buildHead();
+                });
+            }
+
+            document.getElementById('acrylic-file-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    state.acrylicRawFile = file;
+                    refreshAcrylicImage();
+                    showToast('アクスタ画像を読み込みました！');
+                }
+            });
+            document.getElementById('acrylic-remove-white').addEventListener('change', refreshAcrylicImage);
+
+            document.getElementById('acrylic-size-slider').addEventListener('input', (e) => {
+                state.acrylicConfig.size = parseFloat(e.target.value);
+                document.getElementById('acrylic-size-val').textContent = state.acrylicConfig.size.toFixed(2);
+                buildHead();
+            });
+            document.getElementById('acrylic-x-slider').addEventListener('input', (e) => {
+                state.acrylicConfig.x = parseFloat(e.target.value);
+                document.getElementById('acrylic-x-val').textContent = state.acrylicConfig.x.toFixed(2);
+                buildHead();
+            });
+            document.getElementById('acrylic-y-slider').addEventListener('input', (e) => {
+                state.acrylicConfig.y = parseFloat(e.target.value);
+                document.getElementById('acrylic-y-val').textContent = state.acrylicConfig.y.toFixed(2);
+                buildHead();
+            });
+
+            renderDecalsUI();
+
+            const colorPicker = document.getElementById('color-picker');
+            const colorHex = document.getElementById('color-hex');
+
+            function updateColor(newColor) {
+                state.color = newColor.toUpperCase();
+                colorPicker.value = state.color;
+                colorHex.textContent = state.color;
+
+                const threeColor = new THREE.Color(state.color);
+                if (headMaterial) {
+                    headMaterial.color = threeColor;
+                    headMaterial.emissive = threeColor;
+                }
+                if (auraMaterial) {
+                    auraMaterial.color = threeColor;
+                }
+                if (glowLight) {
+                    glowLight.color = threeColor;
+                }
+                if (state.shape === 'acrylic') {
+                    buildHead();
+                }
+            }
+
+            colorPicker.addEventListener('input', (e) => updateColor(e.target.value));
+
+            document.querySelectorAll('#preset-colors button').forEach(btn => {
+                btn.addEventListener('click', () => updateColor(btn.dataset.color));
+            });
+
+            document.getElementById('head-text').addEventListener('input', (e) => {
+                state.headText = e.target.value;
+                const textControls = document.getElementById('text-controls');
+                if (state.headText.trim() !== '') {
+                    textControls.classList.remove('hidden');
+                } else {
+                    textControls.classList.add('hidden');
+                }
+                buildHead();
+            });
+
+            document.getElementById('text-size-slider').addEventListener('input', (e) => {
+                state.textConfig.size = parseFloat(e.target.value);
+                document.getElementById('text-size-val').textContent = state.textConfig.size.toFixed(2);
+                buildHead();
+            });
+            document.getElementById('text-x-slider').addEventListener('input', (e) => {
+                state.textConfig.x = parseFloat(e.target.value);
+                document.getElementById('text-x-val').textContent = state.textConfig.x.toFixed(2);
+                buildHead();
+            });
+            document.getElementById('text-y-slider').addEventListener('input', (e) => {
+                state.textConfig.y = parseFloat(e.target.value);
+                document.getElementById('text-y-val').textContent = state.textConfig.y.toFixed(2);
+                buildHead();
+            });
+
+            document.getElementById('handle-text').addEventListener('input', (e) => {
+                state.handleText = e.target.value;
+                buildHandle();
+            });
+
+            const toggleSwingBtn = document.getElementById('toggle-swing-btn');
+            const swingIcon = document.getElementById('swing-icon');
+            const swingLabel = document.getElementById('swing-label');
+            toggleSwingBtn.addEventListener('click', () => {
+                state.isSwinging = !state.isSwinging;
+                if (state.isSwinging) {
+                    toggleSwingBtn.className = 'px-3 py-1.5 rounded-full bg-zinc-900 text-white border border-zinc-900 text-[11px] font-bold hover:bg-zinc-800 transition-all shadow-sm flex items-center gap-1.5 shrink-0 z-10';
+                    swingIcon.textContent = '■';
+                    swingLabel.textContent = '停止';
+                } else {
+                    toggleSwingBtn.className = 'px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 text-[11px] font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1.5 shrink-0 z-10';
+                    swingIcon.textContent = '▶';
+                    swingLabel.textContent = '振る';
+                }
+            });
+
+            document.getElementById('reset-pos-btn').addEventListener('click', () => {
+                camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
+                controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
+                controls.update();
+                resetSwingPose();
+                state.isSwinging = false;
+                toggleSwingBtn.className = 'px-3 py-1.5 rounded-full bg-white/90 backdrop-blur border border-zinc-200 text-zinc-800 text-[11px] font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1.5 shrink-0 z-10';
+                swingIcon.textContent = '▶';
+                swingLabel.textContent = '振る';
+                showToast('視点と位置を初期状態にリセットしました');
+            });
+
+            document.getElementById('reset-cam-btn').addEventListener('click', () => {
+                camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
+                controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
+                controls.update();
+            });
+
+            document.getElementById('download-glb-btn').addEventListener('click', exportGLB);
+            document.getElementById('save-img-btn').addEventListener('click', saveImage);
+            document.getElementById('save-gif-btn').addEventListener('click', saveLoopGif);
+            document.getElementById('share-btn').addEventListener('click', shareImage);
+
+            document.getElementById('close-modal-btn').addEventListener('click', () => {
+                document.getElementById('media-modal').classList.add('hidden');
+            });
+            document.getElementById('media-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'media-modal') {
+                    document.getElementById('media-modal').classList.add('hidden');
+                }
+            });
+
+            document.getElementById('modal-native-share-btn').addEventListener('click', async () => {
+                if (!currentModalBlob) return;
+                const file = new File([currentModalBlob], currentModalFilename, { type: currentModalBlob.type });
+                if (navigator.share) {
+                    try {
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                title: 'オリジナルペンライト',
+                                text: 'オリジナル3Dペンライトを作りました！',
+                                files: [file]
+                            });
+                            return;
+                        }
+                    } catch (err) {
+                        if (err.name === 'AbortError') return;
+                    }
+                }
+                showToast('上の画像を長押しして保存・共有してください');
+            });
+        }
+
+        function exportGLB() {
+            showToast('手のひらサイズ（約24cm）のGLBデータを生成中...');
+            const prevRot = penlightGroup.rotation.clone();
+            const prevPos = penlightGroup.position.clone();
+            const prevScale = penlightGroup.scale.clone();
+            resetSwingPose();
+
+            // GLBビューワー等で正面を向き、持ち手付近が原点(0, 0, 0)にぴったり配置されるよう正規化
+            const palmScale = 0.04;
+            penlightGroup.rotation.set(0, Math.PI, 0);
+            penlightGroup.scale.set(palmScale, palmScale, palmScale);
+            penlightGroup.position.set(0, 1.2 * palmScale, 0);
+            penlightGroup.updateMatrixWorld(true);
+
+            const hiddenObjects = [];
+            penlightGroup.traverse((child) => {
+                if (child.userData && (child.userData.isAura || child.userData.skipExport)) {
+                    child.visible = false;
+                    hiddenObjects.push(child);
+                }
+            });
+
+            const exporter = new THREE.GLTFExporter();
+            exporter.parse(
+                penlightGroup,
+                function (result) {
+                    hiddenObjects.forEach(m => m.visible = true);
+                    penlightGroup.scale.copy(prevScale);
+                    penlightGroup.rotation.copy(prevRot);
+                    penlightGroup.position.copy(prevPos);
+                    penlightGroup.updateMatrixWorld(true);
+
+                    const blob = new Blob([result], { type: 'application/octet-stream' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.style.display = 'none';
+                    link.href = url;
+                    link.download = `original_penlight_${Date.now()}.glb`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    showToast('手のひらサイズのGLBファイルをダウンロードしました！');
+                },
+                { binary: true }
+            );
+        }
+
+        function saveImage() {
+            const savedView = setFixedFrontView();
+            const prevBg = scene.background;
+            scene.background = null;
+            renderer.setClearColor(0x000000, 0);
+            renderer.render(scene, camera);
+
+            renderer.domElement.toBlob((blob) => {
+                scene.background = prevBg;
+                restoreViewState(savedView);
+                if (!blob) return;
+                const filename = `my_penlight_${Date.now()}.png`;
+                openMediaModal(blob, filename, '透過静止画の保存・共有');
+
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }, 'image/png');
+        }
+
+        async function saveLoopGif() {
+            if (isRecordingGif) return;
+            if (typeof GIF === 'undefined') {
+                showToast('GIF生成ライブラリの読み込みに失敗しました');
+                return;
+            }
+
+            isRecordingGif = true;
+            const savedView = setFixedFrontView();
+            showToast('ループGIFを生成中...（数秒お待ちください）');
+
+            try {
+                const workerRes = await fetch('https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js');
+                const workerText = await workerRes.text();
+                const workerBlob = new Blob([workerText], { type: 'application/javascript' });
+                const workerUrl = URL.createObjectURL(workerBlob);
+
+                const srcCanvas = renderer.domElement;
+                const gifW = 360;
+                const gifH = Math.round(gifW * (srcCanvas.height / srcCanvas.width));
+
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = gifW;
+                tempCanvas.height = gifH;
+                const tempCtx = tempCanvas.getContext('2d');
+
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: gifW,
+                    height: gifH,
+                    workerScript: workerUrl
+                });
+
+                const totalFrames = 24;
+                for (let i = 0; i < totalFrames; i++) {
+                    const phase = (i / totalFrames) * Math.PI * 2;
+                    applySwingPose(phase);
+
+                    if (composer) composer.render();
+                    else renderer.render(scene, camera);
+
+                    tempCtx.clearRect(0, 0, gifW, gifH);
+                    tempCtx.drawImage(srcCanvas, 0, 0, gifW, gifH);
+                    gif.addFrame(tempCtx, { copy: true, delay: 40 });
+                }
+
+                gif.on('finished', function (blob) {
+                    URL.revokeObjectURL(workerUrl);
+                    const filename = `penlight_loop_${Date.now()}.gif`;
+
+                    isRecordingGif = false;
+                    restoreViewState(savedView);
+                    if (!state.isSwinging) resetSwingPose();
+
+                    openMediaModal(blob, filename, 'ループGIFの保存・共有');
+
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.style.display = 'none';
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                });
+
+                gif.render();
+            } catch (e) {
+                console.error(e);
+                isRecordingGif = false;
+                restoreViewState(savedView);
+                if (!state.isSwinging) resetSwingPose();
+                showToast('GIF生成中にエラーが発生しました');
+            }
+        }
+
+        async function shareImage() {
+            const savedView = setFixedFrontView();
+            const prevBg = scene.background;
+            scene.background = null;
+            renderer.setClearColor(0x000000, 0);
+            renderer.render(scene, camera);
+
+            renderer.domElement.toBlob(async (blob) => {
+                scene.background = prevBg;
+                restoreViewState(savedView);
+                if (!blob) return;
+                const filename = `my_penlight_${Date.now()}.png`;
+                const file = new File([blob], filename, { type: 'image/png' });
+
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: 'オリジナルペンライト',
+                            text: 'オリジナル3Dペンライトを作りました！',
+                            files: [file]
+                        });
+                        return;
+                    } catch (err) {
+                        if (err.name === 'AbortError') return;
+                    }
+                }
+
+                openMediaModal(blob, filename, '透過画像の保存・共有');
+            }, 'image/png');
+        }
+
+        window.onload = function () {
+            initThree();
+            setupUI();
+        };
+    </script>
+</body>
+</html>
