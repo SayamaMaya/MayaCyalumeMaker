@@ -86,7 +86,6 @@
             </button>
         </div>
     </div>
-
     <!-- メインコンテナ（清潔感のある白ベースUI） -->
     <div class="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm">
         
@@ -95,7 +94,6 @@
             <h1 class="text-xl font-bold tracking-wider text-zinc-900">PENLIGHT MAKER</h1>
             <p class="text-xs text-zinc-400 mt-1">オリジナル3Dペンライト作成＆共有</p>
         </header>
-
         <!-- 使い方動画ガイド（ヘッダー直下・開閉式） -->
         <details open class="group bg-zinc-50 border border-zinc-200 rounded-2xl overflow-hidden">
             <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer select-none text-xs font-bold text-zinc-800 hover:bg-zinc-100 transition-colors list-none">
@@ -108,7 +106,6 @@
                 </div>
             </div>
         </details>
-
         <!-- 利用条件（Xポストリンクエリア・開閉式） -->
         <details open class="group bg-zinc-50 border border-zinc-200 rounded-2xl overflow-hidden">
             <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer select-none text-xs font-bold text-zinc-800 hover:bg-zinc-100 transition-colors list-none">
@@ -130,7 +127,6 @@
                 </a>
             </div>
         </details>
-
         <!-- プレビュー（常に上部で固定表示・操作しながらリアルタイム確認可能） -->
         <section class="sticky top-2 z-30 bg-white/95 backdrop-blur-sm pb-2 pt-1 flex flex-col gap-1.5 border-b border-zinc-100">
             <div class="flex items-center justify-between">
@@ -160,7 +156,6 @@
                 </button>
             </div>
         </section>
-
         <!-- ① デザインを選択 -->
         <section class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
@@ -195,7 +190,6 @@
                 </button>
             </div>
         </section>
-
         <!-- ② 発光カラーを選択 -->
         <section class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
@@ -220,7 +214,6 @@
                 </div>
             </div>
         </section>
-
         <!-- ③ デザイン部分の文字入れ -->
         <section id="text-input-section" class="flex flex-col gap-2">
             <div class="flex items-center gap-2">
@@ -255,7 +248,6 @@
                 </div>
             </div>
         </section>
-
         <!-- ④ 持ち手の名前 -->
         <section class="flex flex-col gap-2 border-t border-zinc-100 pt-4">
             <div class="flex items-center gap-2">
@@ -265,7 +257,6 @@
             <input type="text" id="handle-text" placeholder="例：HANAKO / 2026.11.16" maxlength="20"
                 class="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:outline-none focus:border-zinc-900 text-sm transition-colors">
         </section>
-
         <!-- ⑤ 持ち手のリボン装飾 -->
         <section class="flex flex-col gap-3 border-t border-zinc-100 pt-4">
             <div class="flex items-center justify-between">
@@ -324,7 +315,6 @@
                 </div>
             </div>
         </section>
-
         <!-- 保存＆共有ボタンエリア -->
         <section class="flex flex-col gap-2.5 pt-2 border-t border-zinc-100">
             <div class="grid grid-cols-2 gap-2.5">
@@ -338,7 +328,6 @@
                 </button>
             </div>
         </section>
-
         <!-- フッター（利用規約リンク） -->
         <footer class="pt-2 border-t border-zinc-100 flex flex-col items-center gap-1.5 text-center">
             <button type="button" id="open-terms-btn" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 underline underline-offset-4 py-1 px-3 rounded-lg transition-colors">
@@ -347,7 +336,6 @@
             <p class="text-[10px] text-zinc-400">© まや式ペンライトメーカー</p>
         </footer>
     </div>
-
     <!-- 利用規約モーダル -->
     <div id="terms-modal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white border border-zinc-200 rounded-3xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -400,7 +388,6 @@
             </div>
         </div>
     </div>
-
     <!-- 画像保存＆共有用プレビューモーダル（あらゆるブラウザ・アプリ内ブラウザ対応） -->
     <div id="media-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm">
         <div class="bg-white border border-zinc-200 rounded-3xl max-w-sm w-full p-4 sm:p-5 flex flex-col items-center gap-3 shadow-2xl max-h-[94vh] overflow-y-auto">
@@ -414,18 +401,15 @@
             <div class="text-xs text-zinc-700 text-center leading-relaxed bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 w-full">
                 下の画像を<span class="font-bold text-zinc-950 underline">長押し</span>して「写真に保存」！
             </div>
-
             <!-- 透過チェック柄背景のプレビュー枠（長押ししやすいよう大きめに表示） -->
             <div class="w-full rounded-2xl overflow-hidden border border-zinc-200 flex items-center justify-center p-2" style="background-color: #f4f4f5; background-image: linear-gradient(45deg, #e4e4e7 25%, transparent 25%), linear-gradient(-45deg, #e4e4e7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e4e4e7 75%), linear-gradient(-45deg, transparent 75%, #e4e4e7 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0px;">
                 <img id="modal-preview-img" src="" alt="ペンライト画像" class="w-full max-h-72 object-contain">
             </div>
-
             <!-- アプリ内ブラウザで保存できない場合の注意書き（Xアプリ内ブラウザ時のみ表示） -->
             <div id="modal-webview-warning" class="hidden w-full bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-[11px] text-amber-900 leading-relaxed">
                 <span class="font-bold">※Xアプリ内では長押し保存できない場合があります。</span><br>
                 保存できない時は、画面右上の「…」等から<span class="font-bold underline">Safari / Chromeで開き直す</span>か、URLをコピーしてブラウザに貼り付けてください。
             </div>
-
             <!-- アクションボタン群 -->
             <div class="w-full flex flex-col gap-2">
                 <div class="grid grid-cols-2 gap-2">
@@ -438,7 +422,6 @@
                         <span>端末の共有メニュー</span>
                     </button>
                 </div>
-
                 <!-- X（旧Twitter）投稿＆テキストコピー補助 -->
                 <div class="grid grid-cols-2 gap-2 pt-1 border-t border-zinc-100">
                     <a id="modal-x-share-btn" href="#" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3 rounded-xl bg-black text-white text-xs font-bold hover:bg-zinc-800 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5">
@@ -453,12 +436,10 @@
             </div>
         </div>
     </div>
-
     <!-- トースト通知用コンテナ -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-xs font-bold px-5 py-3 rounded-full opacity-0 pointer-events-none transition-opacity duration-300 z-[60] whitespace-nowrap shadow-lg">
         通知メッセージ
     </div>
-
     <script>
         // アプリケーションの状態管理
         const state = {
@@ -476,22 +457,18 @@
             ribbonCharm: 'heart',
             isSwinging: false
         };
-
         // 共有用ポストテキスト定数
         const SHARE_POST_TEXT = `＼オリジナルペンライトが作れる！ ／
 #まや式ペンライトメーカー でペンライトを作りました！
 作成はココから▶️https://sayamamaya.github.io/MayaCyalumeMaker/
 説明動画▶️https://youtu.be/TPDceP3kvKs?si=J3Uo7cPZYY0Mcb8r
 https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`;
-
         const DEFAULT_CAM_POS = { x: 0, y: 1.0, z: 12.0 };
         const DEFAULT_CAM_TARGET = { x: 0, y: 0.85, z: 0 };
-
         let scene, camera, renderer, controls, composer, bloomPass;
         let penlightGroup, headGroup, handleGroup;
         let headMaterial, auraMaterial, glowLight;
         let swingPhase = 0;
-
         // 生成済み画像データのキャッシュ
         let currentModalBlob = null;
         let currentModalDataUrl = null;
@@ -501,13 +478,10 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
         // X（Twitter）やLINEなどのアプリ内ブラウザ（WebView）判定
         function detectInAppBrowser() {
             const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-            // Twitter / X, LINE, Instagram, Facebook, TikTok などのアプリ内ブラウザを検知
             const inAppRegex = /Twitter|X-Client|Line\/|Instagram|FBAN|FBAV|BytedanceWebview|musical_ly|TikTok|wv\)/i;
-            // iOSのWKWebView（SafariではないがSafariのUIを持たないWebView）検知
             const isIOS = /iPhone|iPad|iPod/i.test(ua);
             const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
             const isIOSWebView = isIOS && !isSafari && !/CriOS|FxiOS/i.test(ua);
-
             return inAppRegex.test(ua) || isIOSWebView;
         }
 
@@ -516,17 +490,13 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const currentUrl = window.location.href;
             const ua = navigator.userAgent || '';
             const isAndroid = /Android/i.test(ua);
-
             if (isAndroid) {
-                // Androidの場合はintentスキームでChrome等への遷移を試みる
                 const urlWithoutScheme = currentUrl.replace(/^https?:\/\//, '');
                 const scheme = currentUrl.startsWith('https') ? 'https' : 'http';
                 const intentUrl = `intent://${urlWithoutScheme}#Intent;scheme=${scheme};action=android.intent.action.VIEW;end;`;
                 window.location.href = intentUrl;
                 return;
             }
-
-            // iOSのXアプリ内ブラウザからはJSだけでSafariを強制起動できないため、URLをコピーして手順を案内
             copyTextToClipboard(currentUrl).then(() => {
                 showToast('URLをコピーしました！画面右上の「…」等から「Safariで開く」を押してください');
             });
@@ -550,7 +520,7 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             }, 2800);
         }
 
-        // DataURLからBlobへ同期変換するヘルパー（WebViewや一部のスマホブラウザでのtoBlob不具合回避）
+        // DataURLからBlobへ同期変換するヘルパー
         function dataURLToBlob(dataURL) {
             const parts = dataURL.split(',');
             const mime = parts[0].match(/:(.*?);/)[1];
@@ -593,13 +563,11 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
         // ファイルダウンロードを確実に実行する関数
         function triggerFileDownload(blob, dataUrl, filename) {
             try {
-                // IE / Edge Legacy 対応
                 if (window.navigator && window.navigator.msSaveOrOpenBlob) {
                     window.navigator.msSaveOrOpenBlob(blob, filename);
                     showToast('画像を保存しました！');
                     return;
                 }
-
                 const url = blob ? URL.createObjectURL(blob) : dataUrl;
                 const a = document.createElement('a');
                 a.style.display = 'none';
@@ -607,14 +575,12 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 a.download = filename;
                 document.body.appendChild(a);
                 a.click();
-
                 setTimeout(() => {
                     document.body.removeChild(a);
                     if (blob && url.startsWith('blob:')) {
                         URL.revokeObjectURL(url);
                     }
                 }, 1000);
-
                 showToast('ダウンロードを開始しました（保存されない場合は画像を長押ししてください）');
             } catch (err) {
                 console.error('Download error:', err);
@@ -626,26 +592,18 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             currentModalBlob = blob;
             currentModalDataUrl = dataUrl;
             currentModalFilename = filename;
-
             const modal = document.getElementById('media-modal');
             const img = document.getElementById('modal-preview-img');
             const title = document.getElementById('modal-title');
             const xShareBtn = document.getElementById('modal-x-share-btn');
             const webviewWarning = document.getElementById('modal-webview-warning');
-
-            // iOS/Androidのアプリ内ブラウザ（X, Instagram, LINEなど）では blob: URL の長押し保存がブロックされるため、
-            // Data URL（data:image/png;base64,...）を直接 src に設定する
             img.src = dataUrl;
             title.textContent = titleText || '完成したペンライト画像';
-
             if (isInAppBrowser && webviewWarning) {
                 webviewWarning.classList.remove('hidden');
             }
-
-            // X投稿用インテントURLを設定
             const xIntentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(SHARE_POST_TEXT)}`;
             xShareBtn.href = xIntentUrl;
-
             modal.classList.remove('hidden');
         }
 
@@ -654,10 +612,8 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const canvas = document.getElementById('three-canvas');
             scene = new THREE.Scene();
             scene.background = new THREE.Color('#09090B');
-
             camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
             camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
-
             renderer = new THREE.WebGLRenderer({
                 canvas: canvas,
                 antialias: true,
@@ -668,20 +624,17 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             renderer.setClearColor(0x000000, 0);
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.minDistance = 4;
             controls.maxDistance = 18;
             controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
-
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
             scene.add(ambientLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
             dirLight.position.set(5, 12, 8);
             scene.add(dirLight);
-
             if (typeof THREE.EffectComposer !== 'undefined' && typeof THREE.UnrealBloomPass !== 'undefined') {
                 const renderScene = new THREE.RenderPass(scene, camera);
                 bloomPass = new THREE.UnrealBloomPass(
@@ -692,18 +645,15 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 composer.addPass(renderScene);
                 composer.addPass(bloomPass);
             }
-
             penlightGroup = new THREE.Group();
             scene.add(penlightGroup);
             headGroup = new THREE.Group();
             handleGroup = new THREE.Group();
             penlightGroup.add(headGroup);
             penlightGroup.add(handleGroup);
-
             glowLight = new THREE.PointLight(state.color, 1.0, 10);
             glowLight.position.set(0, 2.4, 0.5);
             penlightGroup.add(glowLight);
-
             buildHandle();
             buildHead();
             window.addEventListener('resize', onWindowResize);
@@ -765,9 +715,8 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             penlightGroup.position.copy(savedState.penPos);
         }
 
-        // 高解像度（1600x1600px）の透過静止画を同期生成（ユーザージェスチャーを維持するため同期処理でDataURLとBlobを作成）
+        // 高解像度（1600x1600px）の透過静止画を同期生成
         function generateExportImage() {
-            // メモリ不足によるスマホのクラッシュや真っ黒出力を防ぐため1600pxに最適化
             const EXPORT_SIZE = 1600;
             const container = document.getElementById('canvas-container');
             const prevW = container ? container.clientWidth : renderer.domElement.clientWidth;
@@ -776,7 +725,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const prevAspect = camera.aspect;
             const prevBg = scene.background;
             const savedView = setFixedFrontView();
-
             try {
                 camera.aspect = 1.0;
                 camera.updateProjectionMatrix();
@@ -788,18 +736,14 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     composer.setPixelRatio(1);
                     composer.setSize(EXPORT_SIZE, EXPORT_SIZE);
                 }
-
-                // 透過背景を保持して直接レンダリング
                 renderer.render(scene, camera);
                 const dataUrl = renderer.domElement.toDataURL('image/png');
                 const blob = dataURLToBlob(dataUrl);
-
                 return { blob, dataUrl };
             } catch (err) {
                 console.error('Export render error:', err);
                 return null;
             } finally {
-                // プレビュー表示状態を必ず復元
                 scene.background = prevBg;
                 camera.aspect = prevAspect;
                 camera.updateProjectionMatrix();
@@ -845,7 +789,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const gripMesh = new THREE.Mesh(gripGeo, gripMat);
             gripMesh.position.y = -1.2;
             handleGroup.add(gripMesh);
-
             const ringMat = new THREE.MeshStandardMaterial({
                 color: 0x3F3F46,
                 roughness: 0.25,
@@ -855,24 +798,20 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const ringMesh = new THREE.Mesh(ringGeo, ringMat);
             ringMesh.position.y = 0.0;
             handleGroup.add(ringMesh);
-
             const capGeo = new THREE.CylinderGeometry(0.28, 0.27, 0.15, 32);
             const capMesh = new THREE.Mesh(capGeo, ringMat);
             capMesh.position.y = -2.45;
             handleGroup.add(capMesh);
-
             const btnMat = new THREE.MeshStandardMaterial({ color: 0x27272A, roughness: 0.2 });
             const btnGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.05, 16);
             btnGeo.rotateX(Math.PI / 2);
             const btnMesh = new THREE.Mesh(btnGeo, btnMat);
             btnMesh.position.set(0, -0.45, 0.31);
             handleGroup.add(btnMesh);
-
             if (state.hasRibbon) {
                 const ribbonObj = buildHandleRibbon();
                 handleGroup.add(ribbonObj);
             }
-
             if (state.handleText.trim() !== '') {
                 const arcAngle = Math.PI * 0.55;
                 const cylRadius = 0.315;
@@ -880,6 +819,7 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const arcLength = cylRadius * arcAngle;
                 const textTex = createHandleTextTexture(state.handleText, arcLength / cylHeight);
                 const textGeo = new THREE.CylinderGeometry(0.323, 0.295, cylHeight, 32, 1, true, -arcAngle / 2, arcAngle);
+                // 持ち手の文字が不透明にくっきり表示されるよう alphaTest を設定
                 const textMat = new THREE.MeshBasicMaterial({
                     map: textTex,
                     transparent: true,
@@ -897,7 +837,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             const ribPosZ = 0.345;
             ribGroup.position.set(0, -0.28, ribPosZ);
             ribGroup.scale.setScalar(ribScale);
-
             const ribColorObj = new THREE.Color(state.ribbonColor);
             const ribMat = new THREE.MeshStandardMaterial({
                 color: ribColorObj,
@@ -915,20 +854,17 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 roughness: 0.28,
                 metalness: 0.35
             });
-
             const bandRadiusTop = 0.348 / ribScale;
             const bandRadiusBottom = 0.344 / ribScale;
             const bandGeo = new THREE.CylinderGeometry(bandRadiusTop, bandRadiusBottom, 0.13, 32);
             const bandMesh = new THREE.Mesh(bandGeo, ribMat);
             bandMesh.position.set(0, 0.02, -ribPosZ / ribScale);
             ribGroup.add(bandMesh);
-
             [-1, 1].forEach(side => {
                 const loopSideGroup = new THREE.Group();
                 loopSideGroup.position.set(side * 0.07, 0.02, 0.02);
                 loopSideGroup.rotation.y = side * -0.18;
                 loopSideGroup.rotation.z = side * 0.06;
-
                 const wingShape = new THREE.Shape();
                 wingShape.moveTo(0, -0.05);
                 wingShape.bezierCurveTo(side * 0.16, -0.24, side * 0.36, -0.34, side * 0.44, -0.25);
@@ -936,7 +872,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 wingShape.bezierCurveTo(side * 0.44, 0.02, side * 0.48, 0.14, side * 0.41, 0.19);
                 wingShape.bezierCurveTo(side * 0.32, 0.22, side * 0.14, 0.12, 0, 0.05);
                 wingShape.closePath();
-
                 const radialSteps = 22;
                 const perimeterPts = wingShape.getSpacedPoints(128);
                 const numPerim = perimeterPts.length - 1;
@@ -945,7 +880,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const frontRingIdx = Array.from({ length: radialSteps + 1 }, () => new Array(numPerim));
                 const backRingIdx = Array.from({ length: radialSteps + 1 }, () => new Array(numPerim));
                 const centerPt = new THREE.Vector2(side * 0.08, -0.02);
-
                 for (let r = 0; r <= radialSteps; r++) {
                     const t = r / radialSteps;
                     const edgeRound = Math.sqrt(Math.max(0, 1 - Math.pow(t, 2.4)));
@@ -975,7 +909,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                         vertices.push(px, py, -halfThick * 0.78);
                     }
                 }
-
                 for (let r = 0; r < radialSteps; r++) {
                     for (let p = 0; p < numPerim; p++) {
                         const nextP = (p + 1) % numPerim;
@@ -996,7 +929,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                         }
                     }
                 }
-
                 for (let p = 0; p < numPerim; p++) {
                     const nextP = (p + 1) % numPerim;
                     const fA = frontRingIdx[radialSteps][p];
@@ -1009,7 +941,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                         indices.push(fA, bB, bA, fA, fB, bB);
                     }
                 }
-
                 const loopGeo = new THREE.BufferGeometry();
                 loopGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
                 loopGeo.setIndex(indices);
@@ -1018,13 +949,11 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 loopSideGroup.add(loopMesh);
                 ribGroup.add(loopSideGroup);
             });
-
             const knotGeo = new THREE.CylinderGeometry(0.095, 0.105, 0.17, 24);
             knotGeo.scale(0.85, 1.0, 1.15);
             const knotMesh = new THREE.Mesh(knotGeo, ribMat);
             knotMesh.position.set(0, 0.02, 0.04);
             ribGroup.add(knotMesh);
-
             [-0.035, 0.035].forEach(ky => {
                 const crease = new THREE.Mesh(new THREE.TorusGeometry(0.092, 0.014, 10, 24), creaseMat);
                 crease.rotation.x = Math.PI / 2;
@@ -1032,7 +961,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 crease.position.set(0, 0.02 + ky, 0.04);
                 ribGroup.add(crease);
             });
-
             if (state.ribbonCharm !== 'none') {
                 const charmMesh = buildRibbonCharm(state.ribbonCharm, ribMat, goldTrimMat);
                 if (charmMesh) {
@@ -1040,7 +968,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     ribGroup.add(charmMesh);
                 }
             }
-
             [-1, 1].forEach(side => {
                 const tailShape = new THREE.Shape();
                 tailShape.moveTo(-0.045, 0);
@@ -1050,7 +977,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 tailShape.lineTo(-0.11, -0.56);
                 tailShape.quadraticCurveTo(-0.07, -0.25, -0.045, 0);
                 tailShape.closePath();
-
                 const tailGeo = new THREE.ExtrudeGeometry(tailShape, {
                     steps: 1,
                     depth: 0.022,
@@ -1066,7 +992,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 tailMesh.rotation.x = -0.06;
                 ribGroup.add(tailMesh);
             });
-
             return ribGroup;
         }
 
@@ -1077,7 +1002,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 roughness: 0.14,
                 metalness: 0.12
             });
-
             function createExtrudedBrooch(shape, scale = 1.0) {
                 const group = new THREE.Group();
                 const frameGeo = new THREE.ExtrudeGeometry(shape, {
@@ -1089,7 +1013,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 });
                 const frameMesh = new THREE.Mesh(frameGeo, goldTrimMat);
                 group.add(frameMesh);
-
                 const gemGeo = new THREE.ExtrudeGeometry(shape, {
                     depth: 0.026,
                     bevelEnabled: true,
@@ -1103,7 +1026,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 group.scale.set(scale, scale, scale);
                 return group;
             }
-
             if (type === 'heart') {
                 const s = new THREE.Shape();
                 s.moveTo(0, -0.075);
@@ -1172,13 +1094,14 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             return charmGroup;
         }
 
+        // サイリウム本体の文字マテリアル生成（透過抜け防止：不透明カットアウト描画）
         function createHeadTextMaterial(textTex) {
             return new THREE.MeshBasicMaterial({
                 map: textTex,
                 transparent: true,
                 depthTest: true,
                 depthWrite: false,
-                side: THREE.DoubleSide
+                side: THREE.FrontSide
             });
         }
 
@@ -1188,7 +1111,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             }
             const baseColor = new THREE.Color(state.color);
             glowLight.color = baseColor;
-
             headMaterial = new THREE.MeshStandardMaterial({
                 color: baseColor,
                 emissive: baseColor,
@@ -1199,7 +1121,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 opacity: 0.94,
                 depthWrite: true
             });
-
             auraMaterial = new THREE.MeshBasicMaterial({
                 color: baseColor,
                 transparent: true,
@@ -1208,9 +1129,7 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 depthWrite: false,
                 side: THREE.FrontSide
             });
-
             const baseConnectWidth = 0.72;
-
             if (state.shape === 'stick') {
                 const radius = 0.335;
                 const stickHeight = 3.64;
@@ -1218,18 +1137,15 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const stickMesh = new THREE.Mesh(stickGeo, headMaterial);
                 stickMesh.position.y = 1.93;
                 headGroup.add(stickMesh);
-
                 const auraGeo1 = new THREE.CylinderGeometry(radius * 1.18, radius * 1.18, stickHeight + 0.08, 32);
                 const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
                 auraMesh1.position.y = 1.93;
                 auraMesh1.userData.isAura = true;
                 headGroup.add(auraMesh1);
-
                 const domeGeo = new THREE.SphereGeometry(radius, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
                 const domeMesh = new THREE.Mesh(domeGeo, headMaterial);
                 domeMesh.position.y = 3.75;
                 headGroup.add(domeMesh);
-
                 if (state.headText.trim() !== '') {
                     const { size: tSize, x: tX, y: tY } = state.textConfig;
                     const arcAngle = Math.min(Math.PI * 1.2, Math.PI * 0.45 * tSize);
@@ -1253,18 +1169,15 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const sphereMesh = new THREE.Mesh(sphereGeo, headMaterial);
                 sphereMesh.position.y = sphereCenterY;
                 headGroup.add(sphereMesh);
-
                 const auraGeo1 = new THREE.SphereGeometry(sphereRadius * 1.08, 36, 28);
                 const auraMesh1 = new THREE.Mesh(auraGeo1, auraMaterial);
                 auraMesh1.position.y = sphereCenterY;
                 auraMesh1.userData.isAura = true;
                 headGroup.add(auraMesh1);
-
                 const neckGeo = new THREE.CylinderGeometry(0.42, 0.33, 0.28, 32);
                 const neckMesh = new THREE.Mesh(neckGeo, headMaterial);
                 neckMesh.position.y = 0.24;
                 headGroup.add(neckMesh);
-
                 if (state.headText.trim() !== '') {
                     const { size: tSize, x: tX, y: tY } = state.textConfig;
                     const plateW = 2.05 * tSize;
@@ -1303,13 +1216,11 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const headMesh = new THREE.Mesh(headGeo, headMaterial);
                 headMesh.position.y = 0.15;
                 headGroup.add(headMesh);
-
                 const auraMesh = new THREE.Mesh(headGeo, auraMaterial);
                 auraMesh.position.set(0, 0.15, 0);
                 auraMesh.scale.set(1.06, 1.06, 1.3);
                 auraMesh.userData.isAura = true;
                 headGroup.add(auraMesh);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(1.6, 0.155);
                 }
@@ -1326,7 +1237,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 bevelSegments: 3
             };
             const halfW = baseConnectWidth / 2;
-
             if (type === 'dog') {
                 const dogShape = new THREE.Shape();
                 dogShape.moveTo(-halfW, 0);
@@ -1340,27 +1250,23 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 dogShape.bezierCurveTo(-1.88, 0.92, -1.42, 0.92, -1.12, 1.12);
                 dogShape.bezierCurveTo(-1.15, 0.72, -0.85, 0.25, -halfW, 0);
                 dogShape.closePath();
-
                 const dogGeo = new THREE.ExtrudeGeometry(dogShape, extrudeSettings);
                 dogGeo.translate(0, 0, -0.08);
                 const dogMesh = new THREE.Mesh(dogGeo, headMaterial);
                 dogMesh.position.y = 0.15;
                 dogMesh.renderOrder = 1;
                 headGroup.add(dogMesh);
-
                 const dogAura = new THREE.Mesh(dogGeo, auraMaterial);
                 dogAura.position.set(0, 0.15 - 0.04, 0);
                 dogAura.scale.set(1.05, 1.05, 1.3);
                 dogAura.userData.isAura = true;
                 dogAura.renderOrder = 2;
                 headGroup.add(dogAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + 1.25, 0.155);
                 }
                 return;
             }
-
             if (type === 'bear') {
                 const rFace = 1.42;
                 const cyFace = 1.42;
@@ -1378,20 +1284,16 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const ry = (dx / d) * h;
                 const pLow = { x: xm - rx, y: ym - ry };
                 const pHigh = { x: xm + rx, y: ym + ry };
-
                 const faceRightAngle = Math.atan2(pLow.y - cyFace, pLow.x);
                 const faceTopRightAngle = Math.atan2(pHigh.y - cyFace, pHigh.x);
                 const faceTopLeftAngle = Math.PI - faceTopRightAngle;
                 const faceLeftAngle = Math.PI - faceRightAngle;
-
                 const rightEarStartAngle = Math.atan2(pLow.y - cyEar, pLow.x - cxEar);
                 const rightEarEndAngle = Math.atan2(pHigh.y - cyEar, pHigh.x - cxEar);
                 const leftEarStartAngle = Math.atan2(pHigh.y - cyEar, -pHigh.x + cxEar);
                 const leftEarEndAngle = Math.atan2(pLow.y - cyEar, -pLow.x + cxEar);
-
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
-
                 const bearShape = new THREE.Shape();
                 bearShape.moveTo(-halfW, 0);
                 bearShape.lineTo(halfW, 0);
@@ -1401,27 +1303,23 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 bearShape.absarc(-cxEar, cyEar, rEar, leftEarStartAngle, leftEarEndAngle, false);
                 bearShape.absarc(0, cyFace, rFace, faceLeftAngle, baseAngleLeft, false);
                 bearShape.closePath();
-
                 const bearGeo = new THREE.ExtrudeGeometry(bearShape, extrudeSettings);
                 bearGeo.translate(0, 0, -0.08);
                 const bearMesh = new THREE.Mesh(bearGeo, headMaterial);
                 bearMesh.position.y = 0.15;
                 bearMesh.renderOrder = 1;
                 headGroup.add(bearMesh);
-
                 const bearAura = new THREE.Mesh(bearGeo, auraMaterial);
                 bearAura.position.set(0, 0.15 - 0.04, 0);
                 bearAura.scale.set(1.06, 1.06, 1.3);
                 bearAura.userData.isAura = true;
                 bearAura.renderOrder = 2;
                 headGroup.add(bearAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
                 }
                 return;
             }
-
             if (type === 'cat') {
                 const rFace = 1.42;
                 const cyFace = 1.42;
@@ -1429,7 +1327,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const aHigh = 1.08;
                 const baseAngleRight = -Math.PI / 2 + Math.asin(halfW / rFace);
                 const baseAngleLeft = -Math.PI / 2 - Math.asin(halfW / rFace);
-
                 const catShape = new THREE.Shape();
                 catShape.moveTo(-halfW, 0);
                 catShape.lineTo(halfW, 0);
@@ -1443,21 +1340,18 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 catShape.quadraticCurveTo(-1.36, 2.55, Math.cos(Math.PI - aLow) * rFace, cyFace + Math.sin(Math.PI - aLow) * rFace);
                 catShape.absarc(0, cyFace, rFace, Math.PI - aLow, baseAngleLeft, false);
                 catShape.closePath();
-
                 const catGeo = new THREE.ExtrudeGeometry(catShape, extrudeSettings);
                 catGeo.translate(0, 0, -0.08);
                 const catMesh = new THREE.Mesh(catGeo, headMaterial);
                 catMesh.position.y = 0.15;
                 catMesh.renderOrder = 1;
                 headGroup.add(catMesh);
-
                 const catAura = new THREE.Mesh(catGeo, auraMaterial);
                 catAura.position.set(0, 0.15 - 0.04, 0);
                 catAura.scale.set(1.06, 1.06, 1.3);
                 catAura.userData.isAura = true;
                 catAura.renderOrder = 2;
                 headGroup.add(catAura);
-
                 if (state.headText.trim() !== '') {
                     addFlatTextMesh(0.15 + cyFace - 0.05, 0.155);
                 }
@@ -1482,7 +1376,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
         function createSingleContourShape(type, baseConnectWidth) {
             const shape = new THREE.Shape();
             const halfW = baseConnectWidth / 2;
-
             if (type === 'heart') {
                 shape.moveTo(-halfW, 0);
                 shape.lineTo(halfW, 0);
@@ -1542,9 +1435,10 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
+            // 半透明のぼかしが透過抜けを起こさないようシャドウをなくし、不透明な白文字でくっきり描画
             ctx.fillStyle = '#FFFFFF';
-            ctx.shadowColor = 'rgba(255, 255, 255, 0.95)';
-            ctx.shadowBlur = 12;
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
 
             if (isVertical) {
                 const columns = safeText.split('\n');
@@ -1554,20 +1448,17 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const maxAvailableWidth = colWidth * 0.72;
                 const lineHeightRatio = 1.12;
                 const maxCharsInCol = Math.max(1, ...columns.map(col => Array.from(col).length));
-
                 let fontSize = Math.min(maxAvailableWidth, 110);
                 if (maxCharsInCol * fontSize * lineHeightRatio > maxAvailableHeight) {
                     fontSize = Math.floor(maxAvailableHeight / (maxCharsInCol * lineHeightRatio));
                 }
                 fontSize = Math.max(18, fontSize);
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
                 columns.forEach((colText, colIndex) => {
                     const chars = Array.from(colText);
                     const colCenterX = canvas.width - colWidth * (colIndex + 0.5);
                     const totalHeight = chars.length * fontSize * lineHeightRatio;
                     let startY = (canvas.height - totalHeight) / 2 + (fontSize * lineHeightRatio) / 2;
-
                     chars.forEach((char) => {
                         ctx.save();
                         ctx.translate(colCenterX, startY);
@@ -1589,7 +1480,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 const maxTextHeight = canvas.height * 0.75;
                 let fontSize = lines.length > 1 ? 96 : 130;
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
                 let longestLineWidth = Math.max(...lines.map(l => ctx.measureText(l).width));
                 if (longestLineWidth > maxTextWidth) {
                     fontSize = Math.floor(fontSize * (maxTextWidth / longestLineWidth));
@@ -1600,15 +1490,24 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 }
                 fontSize = Math.max(24, fontSize);
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
-
                 const finalLineHeight = fontSize * 1.22;
                 let startY = (canvas.height - finalLineHeight * (lines.length - 1)) / 2;
-
                 lines.forEach((line) => {
                     ctx.fillText(line, canvas.width / 2, startY);
                     startY += finalLineHeight;
                 });
             }
+            // 黒フリンジ（アンチエイリアス縁の黒ずみ）を完全除去するためRGBを純白(255,255,255)に統一
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] > 0) {
+                    data[i] = 255;
+                    data[i + 1] = 255;
+                    data[i + 2] = 255;
+                }
+            }
+            ctx.putImageData(imgData, 0, 0);
 
             const texture = new THREE.CanvasTexture(canvas);
             texture.premultiplyAlpha = false;
@@ -1623,11 +1522,9 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             canvas.width = Math.max(128, Math.round(canvas.height * aspectRatio));
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(Math.PI / 2);
-
             let fontSize = Math.min(canvas.width * 0.65, 42);
             ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
             const maxW = canvas.height * 0.85;
@@ -1636,13 +1533,52 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 fontSize = Math.floor(fontSize * (maxW / measuredW));
                 ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
             }
-
             ctx.fillStyle = '#3F3F46';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(safeText, 0, 0);
             ctx.restore();
+            // 持ち手文字のフチ黒ずみを防止するためRGBを#3F3F46(63,63,70)に統一
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] > 0) {
+                    data[i] = 63;
+                    data[i + 1] = 63;
+                    data[i + 2] = 70;
+                }
+            }
+            ctx.putImageData(imgData, 0, 0);
 
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.premultiplyAlpha = false;
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        function createHandleTextTexture(text, aspectRatio = 0.3) {
+            const safeText = sanitizeUserText(text, 20);
+            const canvas = document.createElement('canvas');
+            canvas.height = 512;
+            canvas.width = Math.max(128, Math.round(canvas.height * aspectRatio));
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(Math.PI / 2);
+            let fontSize = Math.min(canvas.width * 0.65, 42);
+            ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+            const maxW = canvas.height * 0.85;
+            const measuredW = ctx.measureText(safeText).width;
+            if (measuredW > maxW) {
+                fontSize = Math.floor(fontSize * (maxW / measuredW));
+                ctx.font = `bold ${fontSize}px "Zen Maru Gothic", sans-serif`;
+            }
+            ctx.fillStyle = '#3F3F46';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(safeText, 0, 0);
+            ctx.restore();
             const texture = new THREE.CanvasTexture(canvas);
             texture.needsUpdate = true;
             return texture;
@@ -1660,7 +1596,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     buildHead();
                 });
             });
-
             const colorPicker = document.getElementById('color-picker');
             const colorHex = document.getElementById('color-hex');
             function updateColor(newColor) {
@@ -1683,7 +1618,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             document.querySelectorAll('#preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateColor(btn.dataset.color));
             });
-
             document.getElementById('head-text').addEventListener('input', (e) => {
                 const sanitized = sanitizeUserText(e.target.value, 40);
                 state.headText = sanitized;
@@ -1695,7 +1629,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 }
                 buildHead();
             });
-
             document.getElementById('text-size-slider').addEventListener('input', (e) => {
                 state.textConfig.size = parseFloat(e.target.value);
                 document.getElementById('text-size-val').textContent = state.textConfig.size.toFixed(2);
@@ -1711,17 +1644,14 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 document.getElementById('text-y-val').textContent = state.textConfig.y.toFixed(2);
                 buildHead();
             });
-
             document.getElementById('handle-text').addEventListener('input', (e) => {
                 state.handleText = sanitizeUserText(e.target.value, 20);
                 buildHandle();
             });
-
             const toggleRibbonBtn = document.getElementById('toggle-ribbon-btn');
             const ribbonControls = document.getElementById('ribbon-controls');
             const ribbonColorPicker = document.getElementById('ribbon-color-picker');
             const ribbonColorHex = document.getElementById('ribbon-color-hex');
-
             toggleRibbonBtn.addEventListener('click', () => {
                 state.hasRibbon = !state.hasRibbon;
                 if (state.hasRibbon) {
@@ -1735,7 +1665,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 }
                 buildHandle();
             });
-
             function updateRibbonColor(newCol) {
                 state.ribbonColor = newCol.toUpperCase();
                 ribbonColorPicker.value = state.ribbonColor;
@@ -1746,7 +1675,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             document.querySelectorAll('#ribbon-preset-colors button').forEach(btn => {
                 btn.addEventListener('click', () => updateRibbonColor(btn.dataset.color));
             });
-
             const charmBtns = document.querySelectorAll('.charm-btn');
             charmBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1763,11 +1691,9 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     buildHandle();
                 });
             });
-
             const toggleSwingBtn = document.getElementById('toggle-swing-btn');
             const swingIcon = document.getElementById('swing-icon');
             const swingLabel = document.getElementById('swing-label');
-
             toggleSwingBtn.addEventListener('click', () => {
                 state.isSwinging = !state.isSwinging;
                 if (state.isSwinging) {
@@ -1780,7 +1706,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     swingLabel.textContent = '振る';
                 }
             });
-
             document.getElementById('reset-pos-btn').addEventListener('click', () => {
                 camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
                 controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
@@ -1792,19 +1717,15 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 swingLabel.textContent = '振る';
                 showToast('視点と位置を初期状態にリセットしました');
             });
-
             document.getElementById('reset-cam-btn').addEventListener('click', () => {
                 camera.position.set(DEFAULT_CAM_POS.x, DEFAULT_CAM_POS.y, DEFAULT_CAM_POS.z);
                 controls.target.set(DEFAULT_CAM_TARGET.x, DEFAULT_CAM_TARGET.y, DEFAULT_CAM_TARGET.z);
                 controls.update();
             });
-
-            // 「画像を保存」ボタン：画像を生成して即ダウンロード＆モーダル表示
+            // 「画像を保存」ボタン
             document.getElementById('save-btn').addEventListener('click', handleSaveImage);
-
-            // 「共有・投稿」ボタン：Web Share APIを試行し、使えない環境ではモーダルを開く
+            // 「共有・投稿」ボタン
             document.getElementById('share-btn').addEventListener('click', handleShareImage);
-
             // モーダル閉じる処理
             document.getElementById('close-modal-btn').addEventListener('click', () => {
                 document.getElementById('media-modal').classList.add('hidden');
@@ -1814,19 +1735,16 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     document.getElementById('media-modal').classList.add('hidden');
                 }
             });
-
             // モーダル内「画像をダウンロード」ボタン
             document.getElementById('modal-direct-dl-btn').addEventListener('click', () => {
                 if (!currentModalBlob && !currentModalDataUrl) return;
                 triggerFileDownload(currentModalBlob, currentModalDataUrl, currentModalFilename);
             });
-
             // モーダル内「端末の共有メニュー」ボタン
             document.getElementById('modal-native-share-btn').addEventListener('click', async () => {
                 if (!currentModalBlob) return;
                 await executeNativeShare(currentModalBlob, currentModalFilename, true);
             });
-
             // モーダル内「投稿文をコピー」ボタン
             document.getElementById('modal-copy-text-btn').addEventListener('click', async () => {
                 const ok = await copyTextToClipboard(SHARE_POST_TEXT);
@@ -1836,7 +1754,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     showToast('コピーに失敗しました');
                 }
             });
-
             // 利用規約モーダルの開閉
             const termsModal = document.getElementById('terms-modal');
             document.getElementById('open-terms-btn').addEventListener('click', () => {
@@ -1853,19 +1770,16 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     termsModal.classList.add('hidden');
                 }
             });
-
             // アプリ内ブラウザ（Xなど）検知時のバナー制御
             isInAppBrowser = detectInAppBrowser();
             if (isInAppBrowser) {
                 const banner = document.getElementById('webview-banner');
                 if (banner) banner.classList.remove('hidden');
             }
-
             const openExtBtn = document.getElementById('open-external-browser-btn');
             if (openExtBtn) {
                 openExtBtn.addEventListener('click', tryOpenExternalBrowser);
             }
-
             const copyUrlBtn = document.getElementById('copy-page-url-btn');
             if (copyUrlBtn) {
                 copyUrlBtn.addEventListener('click', async () => {
@@ -1879,7 +1793,7 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
             }
         }
 
-        // ネイティブ共有APIの実行（画像ファイル共有 → テキスト共有 → フォールバック）
+        // ネイティブ共有APIの実行
         async function executeNativeShare(blob, filename, isFromModal = false) {
             if (!navigator.share) {
                 if (isFromModal) {
@@ -1887,10 +1801,7 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 }
                 return false;
             }
-
             const file = new File([blob], filename, { type: 'image/png' });
-
-            // 1. 画像ファイル付きで共有を試みる
             try {
                 if (!navigator.canShare || navigator.canShare({ files: [file] })) {
                     await navigator.share({
@@ -1901,10 +1812,9 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                     return true;
                 }
             } catch (err) {
-                if (err.name === 'AbortError') return true; // ユーザーがキャンセルした場合は正常終了扱い
+                if (err.name === 'AbortError') return true;
                 console.warn('File share failed, trying text-only or fallback:', err);
             }
-
             if (isFromModal) {
                 showToast('画像付き共有に対応していない環境です。上の画像を長押しして保存してください');
             }
@@ -1919,7 +1829,6 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 return;
             }
             const filename = `my_penlight_${Date.now()}.png`;
-            // ブラウザダウンロードを実行しつつ、スマホアプリ内ブラウザ等でも確実に長押し保存できるようモーダルも表示
             openMediaModal(result.blob, result.dataUrl, filename, '画像の保存（長押しまたはボタン）');
             triggerFileDownload(result.blob, result.dataUrl, filename);
         }
@@ -1932,14 +1841,10 @@ https://x.com/sayama_live/status/2124470448331120661?a=2SbuCwiPpa_G7EWh_NA&s=61`
                 return;
             }
             const filename = `my_penlight_${Date.now()}.png`;
-
-            // Xなどのアプリ内ブラウザでは navigator.share が失敗または不完全な動作をするため、直接モーダルを開く
             if (isInAppBrowser) {
                 openMediaModal(result.blob, result.dataUrl, filename, '共有・保存用画像');
                 return;
             }
-
-            // 標準ブラウザ（Safari / Chrome）ではネイティブ共有メニューを優先
             const shared = await executeNativeShare(result.blob, filename, false);
             if (!shared) {
                 openMediaModal(result.blob, result.dataUrl, filename, '共有・保存用画像');
